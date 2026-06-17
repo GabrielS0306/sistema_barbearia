@@ -4,28 +4,29 @@
         public function login(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $email = trim($_POST['email']) ?? '';
-                $password = $_POST['password'] ?? '';
+                $password = $_POST['senha'] ?? '';
 
                 $db = Database::getInstance();
-                $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+                $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = :email");
                 $stmt->execute(['email' => $email]);
-                $user = $stmt->fetch();
+                $usuario = $stmt->fetch();
 
-                if ($user && password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_role'] = $user['role'];
+                if ($usuario && password_verify($password, $usuario['senha'])) {
+                    $_SESSION['user_id'] = $usuario['id'];
+                    $_SESSION['user_role'] = $usuario['role'];
 
                     // Redireciona conforme o papel do usuário
-                    match ($user['role']) {
+                    match ($usuario['role']) {
                         'admin' => header('Location: barbearia/admin/dashboard'),
                         'barber' => header('Location: barbearia/barber/agenda'),
-                        default => header('Location: barbearia/agendamento/novo'),
+                        'cliente' => header('Location: barbearia/cliente/agendamento/novo'),
+                        default => header('Location: barbearia/register') // Redireciona para o registro se o papel for desconhecido,
                     };
 
                     exit;
                 }
 
-                $_SESSION['error'] = "Email ou senha incorretos.";
+                $_SESSION['erro'] = "Email ou senha incorretos.";
                 header('Location: /barbearia/login');
                 exit;
             }
