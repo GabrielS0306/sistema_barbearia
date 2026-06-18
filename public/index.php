@@ -26,8 +26,12 @@
     $router = new Router();
 
     // Rotas -> Irá sendo adicionado as rotas conforme o projeto for crescendo
+
+    // login e registro
     $router->get('/login', 'AuthController::login');
     $router->post('/login', 'AuthController::login');
+    $router->get('/register', 'AuthController::register');
+    $router->post('/register', 'AuthController::register');
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';
