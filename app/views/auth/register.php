@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Sistema de Barbearia</title>
+    <!-- css -->
+    <link rel="stylesheet" href="/barbearia/public/assets/css/login_register.css">
 </head>
 <body>
     <div class="container">
         <h1>Registrar</h1>
+
         <form action="/register" method="POST">
             <div class="form-group">
                 <label for="nome">Nome</label>

@@ -7,23 +7,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema de Barbearia</title>
+    <!-- css -->
+    <link rel="stylesheet" href="/barbearia/public/assets/css/login_register.css">
 </head>
 <body>
-    <h1>Login</h1>
+    <div class="container">
+        <h1>Login</h1>
 
-    <?php if (isset($_SESSION['erro'])): ?>
-        <p style="color: red;"><?= htmlspecialchars($_SESSION['erro']) ?></p>
-        <?php unset($_SESSION['erro']); ?>
-    <?php endif; ?>
+        <?php if (isset($_SESSION['erro'])): ?>
+            <p style="color: red;"><?= htmlspecialchars($_SESSION['erro']) ?></p>
+            <?php unset($_SESSION['erro']); ?>
+        <?php endif; ?>
 
-    <form method="POST" action="/barbearia/login">
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required>
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" required>
+            </div>
 
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
-
-        <button type="submit">Entrar</button>
-    </form>
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+    </div>
 </body>
 </html>
