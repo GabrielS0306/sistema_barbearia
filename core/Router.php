@@ -14,6 +14,19 @@
             $this->routes['POST'][$path] = $handler;
         }
 
+        public function protect(array $rolesPermitidos): void {
+            if (!isset($_SESSION['user_id'])) {
+                header("Location: /login");
+                exit;
+            }
+
+            if (!in_array($_SESSION['user_id'], $rolesPermitidos)) {
+                http_response_code(403);
+                echo "Acesso negado!";
+                exit;
+            }
+        }
+
         public function dispatch(string $method, string $url): void {
             $handler = $this->routes[$method][$url] ?? null;
 

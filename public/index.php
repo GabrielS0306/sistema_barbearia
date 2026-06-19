@@ -27,11 +27,30 @@
 
     // Rotas -> Irá sendo adicionado as rotas conforme o projeto for crescendo
 
-    // login e registro
+    // Rotas públicas
     $router->get('/login', 'AuthController::login');
     $router->post('/login', 'AuthController::login');
     $router->get('/register', 'AuthController::register');
     $router->post('/register', 'AuthController::register');
+
+    // Rotas protegidas — cliente
+    $router->protect(['cliente', 'admin']);
+    $router->get('/agendamento/novo', 'AgendamentoController::novo');
+    $router->post('/agendamento/novo', 'AgendamentoController::novo');
+    $router->get('/agendamento/meus', 'AgendamentoController::meus');
+
+    // Rotas protegidas — barbeiro
+    $router->protect(['barbeiro', 'admin']);
+    $router->get('/barbeiro/agenda', 'BarbeiroController::agenda');
+    $router->post('/barbeiro/status', 'BarbeiroController::atualizarStatus');
+
+    // Rotas protegidas — admin
+    $router->protect(['admin']);
+    $router->get('/admin/dashboard', 'AdminController::dashboard');
+    $router->get('/admin/barbeiros', 'AdminController::barbeiros');
+    $router->post('/admin/barbeiros', 'AdminController::barbeiros');
+    $router->get('/admin/servicos', 'AdminController::servicos');
+    $router->post('/admin/servicos', 'AdminController::servicos');
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';
