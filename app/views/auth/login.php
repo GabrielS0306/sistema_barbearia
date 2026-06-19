@@ -19,7 +19,7 @@
             <?php unset($_SESSION['erro']); ?>
         <?php endif; ?>
 
-        <form action="/barbearia/login" method="POST">
+        <form action="/login" method="POST">
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" name="email" required>

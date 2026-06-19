@@ -1,52 +1,45 @@
-<?php
+<?php 
+
     // core/Router.php
     class Router {
         private array $routes = [];
-        private array $protectedRoutes = [];
 
-        public function get(string $path, string $handler, array $roles = []): void {
+        // O método get é usado para registrar rotas do tipo GET, associando um caminho específico a um manipulador (handler) que será executado quando essa rota for acessada.
+        public function get(string $path, string $handler): void {
             $this->routes['GET'][$path] = $handler;
-            if (!empty($roles)) {
-                $this->protectedRoutes[$path] = $roles;
-            }
         }
 
-        public function post(string $path, string $handler, array $roles = []): void {
+        // O método post é usado para registrar rotas do tipo POST, associando um caminho específico a um manipulador (handler) que será executado quando essa rota for acessada.
+        public function post(string $path, string $handler): void {
             $this->routes['POST'][$path] = $handler;
-            if (!empty($roles)) {
-                $this->protectedRoutes[$path] = $roles;
-            }
         }
 
-        private function protect(string $path): void {
-            if (!isset($this->protectedRoutes[$path])) {
-                return; // rota pública, deixa passar
-            }
-
+        public function protect(array $rolesPermitidos): void {
             if (!isset($_SESSION['user_id'])) {
-                header('Location: /barbearia/login');
+                header("Location: /login");
                 exit;
             }
 
-            if (!in_array($_SESSION['user_role'], $this->protectedRoutes[$path])) {
+            if (!in_array($_SESSION['user_id'], $rolesPermitidos)) {
                 http_response_code(403);
-                echo 'Acesso negado.';
+                echo "Acesso negado!";
                 exit;
             }
         }
 
-        public function dispatch(string $method, string $uri): void {
-            $handler = $this->routes[$method][$uri] ?? null;
+        public function dispatch(string $method, string $url): void {
+            $handler = $this->routes[$method][$url] ?? null;
 
             if (!$handler) {
+                // http_response_code() -> Define o código de status HTTP para a resposta. Neste caso, 404 indica que a página solicitada não foi encontrada.
                 http_response_code(404);
-                echo '404 - Página não encontrada';
+                echo "404 - Página não encontrada";
                 return;
             }
 
-            $this->protect($uri);
-
-            [$class, $action] = explode('::', $handler);
-            (new $class())->$action();
+            [$class, $method] = explode('::', $handler);
+            (new $class())->$method();
         }
     }
+
+?>
