@@ -34,26 +34,23 @@
     $router->post('/register', 'AuthController::register');
 
     // Rotas protegidas — cliente
-    $router->protect(['cliente', 'admin']);
-    $router->get('/agendamento/novo', 'AgendamentoController::novo');
-    $router->post('/agendamento/novo', 'AgendamentoController::novo');
-    $router->get('/agendamento/meus', 'AgendamentoController::meus');
+    $router->get('/agendamento/novo', 'AgendamentoController::novo', ['cliente', 'admin']);
+    $router->post('/agendamento/novo', 'AgendamentoController::novo', ['cliente', 'admin']);
+    $router->get('/agendamento/meus', 'AgendamentoController::meus', ['cliente', 'admin']);
 
     // Rotas protegidas — barbeiro
-    $router->protect(['barbeiro', 'admin']);
-    $router->get('/barbeiro/agenda', 'BarbeiroController::agenda');
-    $router->post('/barbeiro/status', 'BarbeiroController::atualizarStatus');
+    $router->get('/barbeiro/agenda', 'BarbeiroController::agenda', ['barbeiro', 'admin']);
+    $router->post('/barbeiro/status', 'BarbeiroController::atualizarStatus', ['barbeiro', 'admin']);
 
     // Rotas protegidas — admin
-    $router->protect(['admin']);
-    $router->get('/admin/dashboard', 'AdminController::dashboard');
-    $router->get('/admin/barbeiros', 'AdminController::barbeiros');
-    $router->post('/admin/barbeiros', 'AdminController::barbeiros');
-    $router->get('/admin/servicos', 'AdminController::servicos');
-    $router->post('/admin/servicos', 'AdminController::servicos');
+    $router->get('/admin/dashboard', 'AdminController::dashboard', ['admin']);
+    $router->get('/admin/barbeiros', 'AdminController::barbeiros', ['admin']);
+    $router->post('/admin/barbeiros', 'AdminController::barbeiros', ['admin']);
+    $router->get('/admin/servicos', 'AdminController::servicos', ['admin']);
+    $router->post('/admin/servicos', 'AdminController::servicos', ['admin']);
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';
     $uri = '/' . trim($uri, '/');
-
+    
     $router->dispatch($_SERVER['REQUEST_METHOD'], $uri);
