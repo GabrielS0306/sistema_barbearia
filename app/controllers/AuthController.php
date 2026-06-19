@@ -10,25 +10,31 @@
                 $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = :email");
                 $stmt->execute(['email' => $email]);
                 $usuario = $stmt->fetch();
-
+                
                 if ($usuario && password_verify($password, $usuario['senha'])) {
                     $_SESSION['user_id'] = $usuario['id'];
                     $_SESSION['user_role'] = $usuario['role'];
 
                     // Redireciona conforme o papel do usuário
-                    match ($usuario['role']) {
-                        'admin' => header('Location: /admin/dashboard'),
-                        'barber' => header('Location: /barber/agenda'),
-                        'cliente' => header('Location: /cliente/agendamento/novo'),
-                        // Redireciona para o registro se o papel for desconhecido,
-                        default => header('Location: /register')
-                    };
+                    if ($usuario && password_verify($password, $usuario['senha'])) {
+                        $_SESSION['user_id']   = $usuario['id'];
+                        $_SESSION['user_role'] = $usuario['role'];
+
+                        if ($usuario['role'] === 'admin') {
+                            header('Location: /barbearia/admin/dashboard');
+                        } elseif ($usuario['role'] === 'barbeiro') {
+                            header('Location: /barbearia/barbeiro/agenda');
+                        } else {
+                            header('Location: /barbearia/agendamento/novo');
+                        }
+                        exit;
+                    }
 
                     exit;
                 }
 
                 $_SESSION['erro'] = "Email ou senha incorretos.";
-                header('Location: /login');
+                header('Location: /barbearia/login');
                 exit;
             }
 
@@ -37,7 +43,7 @@
 
         public function logout(): void {
             session_destroy();
-            header('Location: /login');
+            header('Location: /barbearia/login');
             exit;
         }
 
@@ -50,7 +56,7 @@
 
                 if ($senha !== $confirmarSenha) {
                     $_SESSION['erro'] = "As senhas não coincidem.";
-                    header('Location: /register');
+                    header('Location: /barbearia/register');
                     exit;
                 }
 
@@ -59,7 +65,7 @@
                 $stmt->execute(['email' => $email]);
                 if ($stmt->fetch()) {
                     $_SESSION['erro'] = "Email já cadastrado.";
-                    header('Location: /register');
+                    header('Location: /barbearia/register');
                     exit;
                 }
 
@@ -72,7 +78,7 @@
                 ]);
 
                 $_SESSION['sucesso'] = "Registro bem-sucedido! Faça login para continuar.";
-                header('Location: /login');
+                header('Location: /barbearia/login');
                 exit;
             }
 
