@@ -46,8 +46,13 @@
     $router->get('/admin/dashboard', 'AdminController::dashboard', ['admin']);
     $router->get('/admin/barbeiros', 'AdminController::barbeiros', ['admin']);
     $router->post('/admin/barbeiros', 'AdminController::barbeiros', ['admin']);
-    $router->get('/admin/servicos', 'AdminController::servicos', ['admin']);
-    $router->post('/admin/servicos', 'AdminController::servicos', ['admin']);
+ 
+    $router->get('/admin/servicos', 'ServicoController::index', ['admin']);
+    $router->get('/admin/servicos/novo', 'ServicoController::form', ['admin']);
+    $router->post('/admin/servicos/novo', 'ServicoController::form', ['admin']);
+    $router->get('/admin/servicos/editar', 'ServicoController::form', ['admin']);
+    $router->post('/admin/servicos/editar', 'ServicoController::form', ['admin']);
+    $router->post('/admin/servicos/deletar', 'ServicoController::deletar', ['admin']);
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';
