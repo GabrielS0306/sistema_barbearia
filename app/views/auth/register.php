@@ -11,7 +11,12 @@
     <div class="container">
         <h1>Registrar</h1>
 
-        <form action="/register" method="POST">
+        <?php if (isset($_SESSION['erro'])): ?>
+            <p style="color: red;"><?= htmlspecialchars($_SESSION['erro']) ?></p>
+            <?php unset($_SESSION['erro']); ?>
+        <?php endif; ?>
+
+        <form action="/barbearia/register" method="POST">
             <div class="form-group">
                 <label for="nome">Nome</label>
                 <input type="text" id="nome" name="nome" class="form-control" required>
