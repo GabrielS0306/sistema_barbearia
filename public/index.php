@@ -5,6 +5,7 @@
     // carrega classes de infraestrutura
     require_once __DIR__ . '/../core/Database.php';
     require_once __DIR__ . '/../core/Router.php';
+    require_once __DIR__ . '/../core/Upload.php';
 
     // Autoload simples: carrega Models e Controllers automaticamente
     spl_autoload_register(function (string $class) {
@@ -42,11 +43,18 @@
     $router->get('/barbeiro/agenda', 'BarbeiroController::agenda', ['barbeiro', 'admin']);
     $router->post('/barbeiro/status', 'BarbeiroController::atualizarStatus', ['barbeiro', 'admin']);
 
-    // Rotas protegidas — admin
+   // Rotas protegidas — admin
     $router->get('/admin/dashboard', 'AdminController::dashboard', ['admin']);
-    $router->get('/admin/barbeiros', 'AdminController::barbeiros', ['admin']);
-    $router->post('/admin/barbeiros', 'AdminController::barbeiros', ['admin']);
- 
+
+    $router->get('/admin/barbeiros', 'BarbeiroAdminController::index', ['admin']);
+    $router->get('/admin/barbeiros/novo-usuario', 'BarbeiroAdminController::novoUsuario', ['admin']);
+    $router->post('/admin/barbeiros/novo-usuario', 'BarbeiroAdminController::novoUsuario', ['admin']);
+    $router->get('/admin/barbeiros/novo-perfil', 'BarbeiroAdminController::novoPerfil', ['admin']);
+    $router->post('/admin/barbeiros/novo-perfil', 'BarbeiroAdminController::novoPerfil', ['admin']);
+    $router->get('/admin/barbeiros/editar', 'BarbeiroAdminController::editar', ['admin']);
+    $router->post('/admin/barbeiros/editar', 'BarbeiroAdminController::editar', ['admin']);
+    $router->post('/admin/barbeiros/deletar', 'BarbeiroAdminController::deletar', ['admin']);
+
     $router->get('/admin/servicos', 'ServicoController::index', ['admin']);
     $router->get('/admin/servicos/novo', 'ServicoController::form', ['admin']);
     $router->post('/admin/servicos/novo', 'ServicoController::form', ['admin']);
