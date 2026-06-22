@@ -24,7 +24,7 @@
 
         public function criar(array $dados): bool {
             $sql = 'INSERT INTO barbeiros (usuario_id, nome, especialidade, foto) 
-                    VALUES (:usuario_id, :nomde, :especialidade, :foto)';
+                    VALUES (:usuario_id, :nome, :especialidade, :foto)';
             $stmt = $this->db->prepare($sql);
 
             return $stmt->execute([

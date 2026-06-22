@@ -16,41 +16,41 @@
         }
 
         // Formuláriopara cirar o USUÁRIO com role barbeiro 
-            public function novoUsuario(): void {
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $email = trim($_POST['email']);
-                    $senha = $_POST['senha'];
+        public function novoUsuario(): void {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email = trim($_POST['email']);
+                $senha = $_POST['senha'];
 
-                    $db = Database::getInstance();
+                $db = Database::getInstance();
 
-                    $stmt = $db->prepare("SELECT id FROM usuarios WHERE email = :email");
-                    $stmt->execute([':email' => $email]);
+                $stmt = $db->prepare("SELECT id FROM usuarios WHERE email = :email");
+                $stmt->execute([':email' => $email]);
 
-                    if ($stmt->fetch()) {
-                        $_SESSION['erro'] = "Email já cadastrado";
-                        header("Location: /barbearia/admin/barbeiros/novo-usuario");
-                        exit;
-                    }
-
-                    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
-                    $stmt = $db->prepare(
-                        "INSERT INTO usuarios (email, senha, role) 
-                        VALUES (:email, :senha, :role)"
-                    );
-
-                    $stmt->execute([
-                        ':email' => $email,
-                        ':senha' => $senhaHash,
-                        ':role'   => 'barbeiro'
-                    ]);
-
-                    header('Location: /barbearia/admin/barbeiros/novo-perfil');
+                if ($stmt->fetch()) {
+                    $_SESSION['erro'] = "Email já cadastrado";
+                    header("Location: /barbearia/admin/barbeiros/novo-usuario");
                     exit;
                 }
 
-                require __DIR__ . "/../views/admin/barbeiro-novo-usuario.php";
+                $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+                $stmt = $db->prepare(
+                    "INSERT INTO usuarios (email, senha, role) 
+                    VALUES (:email, :senha, :role)"
+                );
+
+                $stmt->execute([
+                    ':email' => $email,
+                    ':senha' => $senhaHash,
+                    ':role'   => 'barbeiro'
+                ]);
+
+                header('Location: /barbearia/admin/barbeiros/novo-perfil');
+                exit;
             }
+
+            require __DIR__ . "/../views/admin/barbeiro-novo-usuario.php";
+        }
 
         // Formulário para vincular um usuário (role barbeiro) a um perfil de barbeiro
         public function novoPerfil(): void {
@@ -63,7 +63,7 @@
 
                     if ($resultado === false) {
                         $_SESSION['erro'] = 'Erro ao enviar a foto. Verifique o formato (jpg, png, webp) e tamanho (máx 2MB).';
-                        header("Locaion: /barbearia/admin/barbeiros/novo-perfil");
+                        header("Location: /barbearia/admin/barbeiros/novo-perfil");
                         exit;
                     }
 
@@ -74,7 +74,7 @@
                     'usuario_id'    => (int) $_POST['usuario_id'],
                     'nome'          => trim($_POST['nome']),
                     'especialidade' => trim($_POST['especialidade']),
-                    'foto'          => trim($_POST['foto'] ?? ''),
+                    'foto'          => $nomeArquivo,
                 ];
 
                 $this->model->criar($dados);
@@ -83,7 +83,7 @@
                 exit;
             }
 
-            $usuariosDisponivies = $this->model->usuariosSemPerfil();
+            $usuariosDisponiveis = $this->model->usuariosSemPerfil();
             require __DIR__ . "/../views/admin/barbeiro-novo-perfil.php";
         }
 

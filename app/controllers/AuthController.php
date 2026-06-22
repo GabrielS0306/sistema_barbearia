@@ -8,26 +8,34 @@
 
                 $db = Database::getInstance();
                 $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = :email");
-                $stmt->execute(['email' => $email]);
+                $stmt->execute([':email' => $email]);
                 $usuario = $stmt->fetch();
                 
                 if ($usuario && password_verify($password, $usuario['senha'])) {
                     $_SESSION['user_id'] = $usuario['id'];
                     $_SESSION['user_role'] = $usuario['role'];
 
-                    // Redireciona conforme o papel do usuário
-                    if ($usuario && password_verify($password, $usuario['senha'])) {
-                        $_SESSION['user_id']   = $usuario['id'];
-                        $_SESSION['user_role'] = $usuario['role'];
+                    // Grava o id do perfil específico na sessão conforme a role
+                    if ($usuario['role'] === 'cliente') {
+                        $stmt = $db->prepare("SELECT id FROM clientes WHERE usuario_id = :uid");
+                        $stmt->execute([':uid' => $usuario['id']]);
+                        $cliente = $stmt->fetch();
+                        $_SESSION['user_cliente_id'] = $cliente['id'] ?? null;
+                    }
 
-                        if ($usuario['role'] === 'admin') {
-                            header('Location: /barbearia/admin/dashboard');
-                        } elseif ($usuario['role'] === 'barbeiro') {
-                            header('Location: /barbearia/barbeiro/agenda');
-                        } else {
-                            header('Location: /barbearia/agendamento/novo');
-                        }
-                        exit;
+                    if ($usuario['role'] === 'barbeiro') {
+                        $stmt = $db->prepare('SELECT id FROM barbeiros WHERE usuario_id = :uid');
+                        $stmt->execute([':uid' => $usuario['id']]);
+                        $barbeiro = $stmt->fetch();
+                        $_SESSION['user_barbeiro_id'] = $barbeiro['id'] ?? null;
+                    }
+
+                    if ($usuario['role'] === 'admin') {
+                        header('Location: /barbearia/admin/dashboard');
+                    } elseif ($usuario['role'] === 'barbeiro') {
+                        header('Location: /barbearia/barbeiro/agenda');
+                    } else {
+                        header('Location: /barbearia/agendamento/novo');
                     }
 
                     exit;
@@ -70,11 +78,19 @@
                 }
 
                 $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("INSERT INTO usuarios (nome, email, senha, role) VALUES (:nome, :email, :senha, 'cliente')");
+
+                $stmt = $db->prepare("INSERT INTO usuarios (email, senha, role) VALUES (:email, :senha, 'cliente')");
                 $stmt->execute([
-                    'nome' => $nome,
-                    'email' => $email,
-                    'senha' => $senhaHash
+                    ':email' => $email,
+                    ':senha' => $senhaHash,
+                ]);
+
+                $usuarioId = $db->lastInsertId();
+
+                $stmt = $db->prepare("INSERT INTO clientes (usuario_id, nome, telefone) VALUES (:uid, :nome, '')");
+                $stmt->execute([
+                    ':uid'  => $usuarioId,
+                    ':nome' => $nome,
                 ]);
 
                 $_SESSION['sucesso'] = "Registro bem-sucedido! Faça login para continuar.";
