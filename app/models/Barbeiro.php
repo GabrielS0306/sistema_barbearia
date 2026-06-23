@@ -37,7 +37,7 @@
 
         public function atualizar(int $id, array $dados): bool {
             $sql = 'UPDATE barbeiros
-                    SET nome = :nome, especialidade = :especialidade, foto = :foto,
+                    SET nome = :nome, especialidade = :especialidade, foto = :foto
                     WHERE id = :id';
             $stmt = $this->db->prepare($sql);
 
@@ -50,7 +50,7 @@
         }
 
         public function deletar(int $id): bool {
-            $stmt = $this->db->prepare('DELETE FROM barbairos WHERE id = :id');
+            $stmt = $this->db->prepare('DELETE FROM barbeiros WHERE id = :id');
 
             return $stmt->execute([':id' => $id]);
         }

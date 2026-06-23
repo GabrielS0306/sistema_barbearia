@@ -1,36 +1,42 @@
 <?php
-// app/views/auth/login.php
+    // app/views/auth/login.php
+    $titulo = 'Login';
+    require __DIR__ . '/../layouts/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistema de Barbearia</title>
-    <!-- css -->
-    <link rel="stylesheet" href="/barbearia/public/assets/css/login_register.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Login</h1>
 
-        <?php if (isset($_SESSION['erro'])): ?>
-            <p style="color: red;"><?= htmlspecialchars($_SESSION['erro']) ?></p>
+<div class="max-w-md mx-auto">
+    <h1 class="text-3xl font-bold text-amber-400 mb-8 text-center">Login</h1>
+
+    <?php if (isset($_SESSION['erro'])): ?>
+        <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-6">
+            <?= htmlspecialchars($_SESSION['erro']) ?>
             <?php unset($_SESSION['erro']); ?>
-        <?php endif; ?>
+        </div>
+    <?php endif; ?>
 
-        <form action="/barbearia/login" method="POST">
-            <div class="form-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" required>
-            </div>
+    <form action="/barbearia/login" method="POST" class="bg-gray-900 rounded-xl p-8 flex flex-col gap-5 border border-gray-800">
+        <div class="flex flex-col gap-1">
+            <label for="email" class="text-sm text-gray-400">Email</label>
+            <input type="email" id="email" name="email" required
+                class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:border-amber-400">
+        </div>
 
-            <button type="submit" class="btn">Entrar</button>
-        </form>
-    </div>
-</body>
-</html>
+        <div class="flex flex-col gap-1">
+            <label for="senha" class="text-sm text-gray-400">Senha</label>
+            <input type="password" id="senha" name="senha" required
+                class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:border-amber-400">
+        </div>
+
+        <button type="submit"
+            class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold py-2 rounded-lg transition mt-2">
+            Entrar
+        </button>
+    </form>
+
+    <p class="text-center text-gray-500 text-sm mt-4">
+        Não tem conta?
+        <a href="/barbearia/register" class="text-amber-400 hover:underline">Cadastre-se</a>
+    </p>
+</div>
+
+<?php require __DIR__ . '/../layouts/footer.php'; ?>

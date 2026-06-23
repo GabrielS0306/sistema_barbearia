@@ -115,17 +115,23 @@
                 exit;
             }
 
-            $id = (int) ($GET['id'] ?? 0);
+            $id = (int) ($_GET['id'] ?? 0);
             $barbeiro = $this->model->buscarPorId($id);
 
-            require __DIR__ . "/../views/admin/barbiero-editar.php";
+            require __DIR__ . "/../views/admin/barbeiro-editar.php";
         }
 
         public function deletar(): void {
             $id = (int) ($_POST['id'] ?? 0);
 
             if ($id) {
-                $this->model->deletar($id);
+                try {
+                    $this->model->deletar($id);
+                } catch (PDOException $e) {
+                    $_SESSION['erro'] = 'Não é possível excluir este barbeiro pois ele possui agendamentos vinculados.';
+                    header('Location: /barbearia/admin/barbeiros');
+                    exit;
+                }
             }
 
             header('Location: /barbearia/admin/barbeiros');

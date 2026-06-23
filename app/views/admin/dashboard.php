@@ -1,17 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Admin</title>
-</head>
-<body>
-    <h1>Painel Administrativo</h1>
-    <p>Bem-vindo, <?= htmlspecialchars($_SESSION['user_role']) ?>!</p>
-    <nav>
-        <a href="/barbearia/admin/barbeiros">Barbeiros</a> |
-        <a href="/barbearia/admin/servicos">Serviços</a> |
-        <a href="/barbearia/logout">Sair</a>
-    </nav>
-</body>
-</html>
+<?php
+
+    // app/views/admin/dashboard.php
+    $titulo = 'Dashboard';
+    require __DIR__ . '/../layouts/header.php';
+
+?>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-amber-400">Painel Administrativo</h1>
+    <p class="text-gray-400 mt-1">Gerencie o sistema da barbearia</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <a href="/barbearia/admin/servicos"
+        class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-400 transition group">
+        <div class="text-amber-400 text-3xl mb-3">
+            ✂
+        </div>
+
+        <h2 class="text-xl font-bold group-hover:text-amber-400 transition">Serviços</h2>
+
+        <p class="text-gray-500 text-sm mt-1">Gerencie os serviços oferecidos</p>
+    </a>
+
+    <a href="/barbearia/admin/barbeiros"
+        class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-400 transition group">
+        <div class="text-amber-400 text-3xl mb-3">
+            👤
+        </div>
+
+        <h2 class="text-xl font-bold group-hover:text-amber-400 transition">Barbeiros</h2>
+
+        <p class="text-gray-500 text-sm mt-1">Gerencie a equipe de barbeiros</p>
+    </a>
+
+    <a href="/barbearia/agendamento/meus"
+        class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-400 transition group">
+        <div class="text-amber-400 text-3xl mb-3">
+            📅
+        </div>
+
+        <h2 class="text-xl font-bold group-hover:text-amber-400 transition">Agendamentos</h2>
+
+        <p class="text-gray-500 text-sm mt-1">Visualize todos os agendamentos</p>
+    </a>
+</div>
+
+<?php require __DIR__ . '/../layouts/footer.php'; ?>
