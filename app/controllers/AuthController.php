@@ -6,6 +6,19 @@
                 $email = trim($_POST['email']) ?? '';
                 $password = $_POST['senha'] ?? '';
 
+                // Validação PHP
+                if (empty($email) || empty($password)) {
+                    $_SESSION['erro'] = "Preencha todos os campos.";
+                    header("Location: /barbearia/login");
+                    exit;
+                }
+
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $_SESSION['erro'] = "Email invalido.";
+                    header("Location: /barbearia/login");
+                    exit;
+                }
+
                 $db = Database::getInstance();
                 $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = :email");
                 $stmt->execute([':email' => $email]);
@@ -61,6 +74,19 @@
                 $email = trim($_POST['email']) ?? '';
                 $senha = $_POST['senha'] ?? '';
                 $confirmarSenha = $_POST['confirmar_senha'] ?? '';
+
+                // Validação PHP
+                if (empty($nome) || empty($email) || empty($senha) || empty($confirmarSenha)) {
+                    $_SESSION['erro'] = 'Preencha todos os campos.';
+                    header('Location: /barbearia/register');
+                    exit;
+                }
+
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $_SESSION['erro'] = 'Email inválido.';
+                    header('Location: /barbearia/register');
+                    exit;
+                }
 
                 if ($senha !== $confirmarSenha) {
                     $_SESSION['erro'] = "As senhas não coincidem.";

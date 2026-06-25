@@ -14,7 +14,7 @@
         </div>
     <?php endif; ?>
 
-    <form action="/barbearia/login" method="POST" class="bg-gray-900 rounded-xl p-8 flex flex-col gap-5 border border-gray-800">
+    <form id="form-login" action="/barbearia/login" method="POST" novalidate class="bg-gray-900 rounded-xl p-8 flex flex-col gap-5 border border-gray-800">
         <div class="flex flex-col gap-1">
             <label for="email" class="text-sm text-gray-400">Email</label>
             <input type="email" id="email" name="email" required

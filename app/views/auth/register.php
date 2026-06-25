@@ -16,7 +16,7 @@
         </div>
     <?php endif; ?>
     
-    <form action="/barbearia/register" method="POST" class="bg-gray-900 rounded-xl p-8 flex flex-col gap-3 border border-gray-800">
+    <form id="form-register" action="/barbearia/register" method="POST" novalidate class="bg-gray-900 rounded-xl p-8 flex flex-col gap-3 border border-gray-800">
         <div class="flex flex-col gap-1">
             <label for="nome" class="text-sm text-gray-400">Nome completo</label>
             <input type="text" id="nome" name="nome" required
