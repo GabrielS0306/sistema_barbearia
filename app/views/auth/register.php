@@ -2,6 +2,7 @@
 
     // app/views/auth/register.php
     $itulo = "Cadastro";
+    $script = "register.js";
     require __DIR__ . "/../layouts/header.php";
 
 ?>

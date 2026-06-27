@@ -1,7 +1,10 @@
 <?php
+
     // app/views/auth/login.php
     $titulo = 'Login';
+    $script = "login.js";
     require __DIR__ . '/../layouts/header.php';
+
 ?>
 
 <div class="max-w-md mx-auto">

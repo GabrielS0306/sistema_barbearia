@@ -34,15 +34,13 @@
         <p class="text-gray-500 text-sm mt-1">Gerencie a equipe de barbeiros</p>
     </a>
 
-    <a href="/barbearia/agendamento/meus"
-        class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-400 transition group">
-        <div class="text-amber-400 text-3xl mb-3">
-            📅
-        </div>
+    <a href="/barbearia/admin/dashboard" 
+        class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-400 transition group opacity-50 cursor-not-allowed">
+        <div class="text-amber-400 text-3xl mb-3">📅</div>
 
         <h2 class="text-xl font-bold group-hover:text-amber-400 transition">Agendamentos</h2>
 
-        <p class="text-gray-500 text-sm mt-1">Visualize todos os agendamentos</p>
+        <p class="text-gray-500 text-sm mt-1">Em breve</p>
     </a>
 </div>
 

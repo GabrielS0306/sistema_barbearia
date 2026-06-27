@@ -3,6 +3,7 @@
     // app/views/admin/barbeiro-editar.php
     $barbeiro = $barbeiro ?? null;
     $titulo = 'Editar Barbeiro';
+    $script = 'barbeiro.js';
     require __DIR__ . '/../layouts/header.php';
 
 ?>
@@ -11,9 +12,7 @@
     <h1 class="text-3xl font-bold text-amber-400 mb-8">Editar Barbeiro</h1>
 
     <?php if ($barbeiro): ?>
-        <form action="/barbearia/admin/barbeiros/editar" method="POST"
-            enctype="multipart/form-data"
-            class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5">
+        <form id="form-barbeiro-editar" action="/barbearia/admin/barbeiros/editar" method="POST" enctype="multipart/form-data" class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
 
             <input type="hidden" name="id" value="<?= $barbeiro['id'] ?>">
 

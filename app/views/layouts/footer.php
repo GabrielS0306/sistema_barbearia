@@ -4,6 +4,10 @@
         Sistema de Barbearia &copy; <?= date('Y') ?>
     </footer>
 
-    <script src="/barbearia/public/assets/js/validacoes.js"></script>
+    <?php $script = $script ?? null; ?>
+    <script src="/barbearia/public/assets/js/utils.js"></script>    
+    <?php if (!empty($script)): ?>
+        <script src="/barbearia/public/assets/js/<?= $script ?>"></script>
+    <?php endif; ?>
 </body>
 </html>

@@ -4,6 +4,7 @@
     $servico = $servico ?? null;
     $editando = $servico !== null;
     $titulo = $editando ? 'Editar Serviço' : 'Novo Serviço';
+    $script = 'servico.js';
     require __DIR__ . '/../layouts/header.php';
 
 ?>
@@ -13,10 +14,7 @@
         <?= $editando ? 'Editar Serviço' : 'Novo Serviço' ?>
     </h1>
 
-    <form 
-        action="/barbearia/admin/servicos/<?= $editando ? 'editar' : 'novo' ?>" 
-        method="POST"
-        class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5">
+    <form id="form-servico" action="/barbearia/admin/servicos/<?= $editando ? 'editar' : 'novo' ?>" method="POST" class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
 
         <?php if ($editando): ?>
             <input type="hidden" name="id" value="<?= $servico['id'] ?? '' ?>">

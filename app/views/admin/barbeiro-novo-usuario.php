@@ -2,6 +2,7 @@
 
     // app/views/admin/barbeiro-novo-usuario.php
     $titulo = 'Novo Barbeiro';
+    $script = 'barbeiro.js';
     require __DIR__ . '/../layouts/header.php';
 
 ?>
@@ -20,8 +21,8 @@
         </div>
     <?php endif; ?>
 
-    <form action="/barbearia/admin/barbeiros/novo-usuario" method="POST" 
-        class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5">
+    <form id="form-barbeiro-usuario" action="/barbearia/admin/barbeiros/novo-usuario" method="POST" 
+        class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
 
         <div class="flex flex-col gap-1">
             <label for="email" class="text-sm text-gray-400">Email</label>

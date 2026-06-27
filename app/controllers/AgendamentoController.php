@@ -10,9 +10,23 @@
 
         public function novo(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $barbeiroId = (int) $_POST['barbeiro_id'];
+                $barbeiroId = (int) ($_POST['barbeiro_id'] ?? 0);
+                $servicoID  = (int) ($_POST['servico_id'] ?? 0);
                 $data       = $_POST['data'];
                 $hora       = $_POST['hora'];
+
+                // Validação  PHP
+                if (!$barbeiroId || !$servicoID || empty($data) || empty($hora)) {
+                    $_SESSION['erro'] = 'Preencha todos os campos do agendamento.';
+                    header('Location: /barbearia/agendamento/novo');
+                    exit;
+                }
+
+                if ($data < date('Y-m-d')) {
+                    $_SESSION['erro'] = 'Não é possível agendar para uma data no passado.';
+                    header('Location: /barbearia/agendamento/novo');
+                    exit;
+                }
 
                 if (!$this->model->horarioDisponivel($barbeiroId, $data, $hora)) {
                     $_SESSION['erro'] = 'Horário indisponivel. Escolha outro, por favor!';
