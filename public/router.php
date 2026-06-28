@@ -6,8 +6,14 @@
     // Remove prefixo /barbearia se existir (ambiente local)
     $uri = preg_replace('#^/barbearia#', '', $uri);
 
+    // Redireciona raiz pro login
+    if ($uri === '/' || $uri === '') {
+        header('Location: /login');
+        exit;
+    }
+
     // Se for um arquivo estático que existe, serve diretamente
-    if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
+    if (file_exists(__DIR__ . $uri)) {
         return false;
     }
 
