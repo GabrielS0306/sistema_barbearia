@@ -21,7 +21,7 @@
         Você ainda não tem agendamentos.
     </div>
 <?php else: ?>
-    <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+    <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="bg-gray-800 text-gray-400 uppercase text-xs">
                 <tr>

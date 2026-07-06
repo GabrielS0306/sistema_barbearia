@@ -12,8 +12,8 @@
     <title><?= htmlspecialchars($titulo); ?> - Barbearia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
-    <nav class="bg-gray-900 border-b border-gray-800 px-6 py-4">
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col w-full overflow-x-hidden">
+    <nav class="bg-gray-900 border-b border-gray-800 px-6 py-4 w-full">
         <div class="flex items-center justify-between">
             <span class="text-amber-400 font-bold text-xl">✂ Barbearia</span>
 
@@ -65,6 +65,6 @@
         <?php endif; ?>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-4 py-8">
+    <main class="max-w-5xl mx-auto px-4 py-8 w-full">
 </body>
 </html>
