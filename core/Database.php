@@ -19,7 +19,7 @@
                     $user = getenv('MYSQLUSER');
                     $pass = getenv('MYSQLPASSWORD');
                     $port = getenv('MYSQLPORT' ?? '3306');
-                    $dns = "mysql:host={$host};port{$port};dbname={$dbname};charset=utf8mb4";
+                    $dns = "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4";
                 } else {
                     $cfg = require __DIR__ . '/../config/database.php';
                     $dns = "mysql:host={$cfg['host']};dbname={$cfg['dbname']};charset=utf8mb4";
@@ -27,7 +27,7 @@
                     $pass = $cfg['pass'];
                 }
 
-                self::$instance = new PDO($dns, $cfg['username'], $cfg['password'], [
+                self::$instance = new PDO($dns, $user, $pass, [
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                 ]);
