@@ -62,6 +62,61 @@
 
             return $stmt->fetchAll();
         }
+
+        public function buscarTodos(array $filtros = []): array {
+            $sql = 'SELECT a.*, 
+                        c.nome AS cliente,
+                        b.nome AS barbeiro,
+                        s.nome AS servico,
+                        s.preco
+                    FROM agendamentos a 
+                    JOIN clientes c ON a.cliente_id = c.id
+                    JOIN barbeiros b ON a.barbeiro_id = b.id
+                    JOIN servicos s ON a.servico_id = s.id
+                    WHERE 1=1';
+
+            $params = [];
+
+            if (!empty($filtros['data'])) {
+                $sql .= ' AND a.data = :data';
+                $params[':data'] = $filtros['data'];
+            }
+
+            if (!empty($filtros['barbeiro_id'])) {
+                $sql .= ' AND a.barbeiro_id = :barbeiro_id';
+                $params[':barbeiro_id'] = $filtros['barbeiro_id'];
+            }
+
+            if (!empty($filtros['status'])) {
+                $sql .= ' AND a.status = :status';
+                $params[':status'] = $filtros['status'];
+            }
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+
+            return $stmt->fetchAll();
+        }
+
+        public function contarPorStatus(): array {
+            $sql = 'SELECT status, COUNT(*) AS total FROM agendamentos GROUP BY status';
+
+            $stmt = $this->db->query($sql);
+            $resultado = $stmt->fetchAll();
+
+            $contagem = [
+                'pendente' => 0,
+                'confirmado' => 0,
+                'concluido' => 0,
+                'cancelado' => 0
+            ];
+
+            foreach ($resultado as $row) {
+                $contagem[$row['status']] = $row['total'];
+            }
+
+            return $contagem;
+        }
     }
 
 ?>

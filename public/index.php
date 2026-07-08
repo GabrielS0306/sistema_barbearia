@@ -63,6 +63,8 @@
     $router->post('/admin/servicos/editar', 'ServicoController::form', ['admin']);
     $router->post('/admin/servicos/deletar', 'ServicoController::deletar', ['admin']);
 
+    $router->get('/admin/agendamentos', 'AdminController::agendamentos', ['admin']);
+
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';
     $uri = '/' . trim($uri, '/');
