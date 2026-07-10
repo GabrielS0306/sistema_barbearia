@@ -31,6 +31,7 @@
                     <th class="px-6 py-3 text-left">Serviço</th>
                     <th class="px-6 py-3 text-left">Preço</th>
                     <th class="px-6 py-3 text-left">Status</th>
+                    <th class="px-6 py-3 text-left">Comprovante</th>
                 </tr>
             </thead>
 
@@ -64,6 +65,11 @@
                             <span class="px-2 py-1 rounded-full text-xs font-medium <?= $statusClasses ?>">
                                 <?= htmlspecialchars($ag['status']) ?>
                             </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="/barbearia/agendamento/comprovante?id=<?= $ag['id'] ?>" target="_blank" class="text-amber-400 hover:underline text-sm">
+                                PDF
+                            </a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
