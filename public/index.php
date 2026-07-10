@@ -1,5 +1,10 @@
 <?php 
 
+    // Carrega o autoload do Composer (DOMPDF e outras dependências)
+    if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+        require_once __DIR__ . '/../vendor/autoload.php';
+    }
+
     // public/index.php
 
     // carrega classes de infraestrutura
