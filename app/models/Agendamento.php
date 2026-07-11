@@ -36,7 +36,7 @@
         }
 
         public function buscarPorBarbeiro(int $barbeiroId, string $data): array {
-            $sql = "SELECT a.*, c.nome AS cliente, s.nome AS servico, s.duracao_min
+            $sql = "SELECT a.*, c.nome AS cliente, s.nome AS servico, s.duracao_min, s.preco 
             FROM agendamentos a
             JOIN clientes c ON a.cliente_id = c.id
             JOIN servicos s ON a.servico_id = s.id

@@ -11,19 +11,25 @@
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-amber-400 mb-4">Minha Agenda</h1>
 
-    <form action="/barbearia/barbeiro/agenda" method="GET" class="flex items-end gap-3">
-        <div class="flex flex-col gap-1">
-            <label for="data" class="text-sm text-gray-400">Selecionar data</label>
+    <div class="flex items-end gap-3">
+        <form action="/barbearia/barbeiro/agenda" method="GET" class="flex items-end gap-3">
+            <div class="flex flex-col gap-1">
+                <label for="data" class="text-sm text-gray-400">Selecionar data</label>
+                <input type="date" id="data" name="data" value="<?= $data ?>"
+                    class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:border-amber-400">
+            </div>
+            <button type="submit"
+                class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold px-4 py-2 rounded-lg transition">
+                Buscar
+            </button>
+        </form>
 
-            <input type="date" id="data" name="data" value="<?= $data ?>"
-                class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:border-amber-400">
-        </div>
-
-        <button type="submit"
-            class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold px-4 py-2 rounded-lg transition">
-            Buscar
-        </button>
-    </form>
+        <a href="/barbearia/barbeiro/agenda/pdf?data=<?= $data ?>"
+            target="_blank"
+            class="bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold px-4 py-2 rounded-lg transition text-sm">
+            📄 Exportar PDF
+        </a>
+    </div>
 
     <p class="text-gray-400 mt-3 text-sm">
         Exibindo agenda de <span class="text-amber-400 font-medium"><?= date('d/m/Y', strtotime($data)) ?></span>

@@ -49,6 +49,7 @@
     // Rotas protegidas — barbeiro
     $router->get('/barbeiro/agenda', 'BarbeiroController::agenda', ['barbeiro', 'admin']);
     $router->post('/barbeiro/status', 'BarbeiroController::atualizarStatus', ['barbeiro', 'admin']);
+    $router->get('/barbeiro/agenda/pdf', 'BarbeiroController::agendaPdf', ['barbeiro', 'admin']);
 
    // Rotas protegidas — admin
     $router->get('/admin/dashboard', 'AdminController::dashboard', ['admin']);
