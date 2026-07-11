@@ -185,7 +185,7 @@
                 </head>
                 <body>
                     <div class='header'>
-                        <h1>✂ Barbearia</h1>
+                        <h1>Barbearia</h1>
                         <p>Comprovante de Agendamento</p>
                     </div>
 

@@ -70,6 +70,7 @@
     $router->post('/admin/servicos/deletar', 'ServicoController::deletar', ['admin']);
 
     $router->get('/admin/agendamentos', 'AdminController::agendamentos', ['admin']);
+    $router->get('/admin/relatorio', 'AdminController::relatorio', ['admin']);
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';

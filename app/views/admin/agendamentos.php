@@ -48,6 +48,28 @@
         </div>
     </div>
 
+    <!-- Botão de relatório -->
+    <div class="flex justify-end mb-4">
+        <form action="/barbearia/admin/relatorio" method="GET" class="flex gap-3 items-end flex-wrap">
+            <div class="flex flex-col gap-1">
+                <label class="text-xs text-gray-400">De</label>
+                <input type="date" name="data_inicio"
+                    value="<?= date('Y-m-01') ?>"
+                    class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-gray-100 text-sm focus:outline-none focus:border-amber-400">
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs text-gray-400">Até</label>
+                <input type="date" name="data_fim"
+                    value="<?= date('Y-m-d') ?>"
+                    class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-gray-100 text-sm focus:outline-none focus:border-amber-400">
+            </div>
+            <button type="submit"
+                class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold px-4 py-2 rounded-lg transition text-sm">
+                📄 Gerar Relatório PDF
+            </button>
+        </form>
+    </div>
+
     <!-- Filtros -->
     <form action="/barbearia/admin/agendamentos" method="GET" class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-wrap gap-3 mb-6">
         <div class="flex flex-col gap-1 flex-1 min-w-[150px]">
