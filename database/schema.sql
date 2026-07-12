@@ -20,6 +20,8 @@ CREATE TABLE `agendamentos` (
   `data` date NOT NULL,
   `hora` time NOT NULL,
   `status` enum('pendente','confirmado','concluido','cancelado') DEFAULT 'pendente',
+  `forma_pagamento` ENUM('dinheiro','pix','cartao') DEFAULT 'dinheiro',
+  `status_pagamento` ENUM('pendente','pago','cancelado') DEFAULT 'pendente',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
