@@ -10,8 +10,8 @@
 
         public function novo(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $barbeiroId = (int) ($_POST['barbeiro_id'] ?? 0);
-                $servicoID  = (int) ($_POST['servico_id'] ?? 0);
+                $barbeiroId = (int) $_POST['barbeiro_id'];
+                $servicoID  = (int) $_POST['servico_id'];
                 $data       = $_POST['data'];
                 $hora       = $_POST['hora'];
 
@@ -34,21 +34,19 @@
                     exit;
                 }
 
-                $this->model->criar([
+                $_SESSION['agendamento_pendente'] = [
                     'cliente_id'  => $_SESSION['user_cliente_id'],
                     'barbeiro_id' => $barbeiroId,
-                    'servico_id'  => (int) $_POST['servico_id'],
+                    'servico_id'  => $servicoID,
                     'data'        => $data,
                     'hora'        => $hora,
-                ]);
+                ];
 
-                $_SESSION['sucesso'] = "Agendamento realizado com sucesso!";
-                header("Location: /barbearia/agendamento/meus");
-                exit;
+                header('Location: /barbearia/agendamento/pagamento');
             }
 
             // GET: Carrega barbeiros e serviços pra preencher o formulário
-            $db = Database::getInstance();
+            $db        = Database::getInstance();
             $barbeiros = $db->query('SELECT id, nome FROM barbeiros ORDER BY nome')->fetchAll();
             $servicos  = $db->query('SELECT id, nome, preco, duracao_min FROM servicos ORDER BY nome')->fetchAll();
 
@@ -233,6 +231,54 @@
                 </body>
                 </html>
             ";
+        }
+
+        public function pagamento(): void {
+            if (empty($_SESSION['agendamento_pendente'])) {
+                header('Location: /barbearia/agendamento/novo');
+                exit;
+            }
+
+            $dados = $_SESSION['agendamento_pendente'];
+
+            // Buscar os detalhes do serviço e barbeiro e serviço para exibir na tela 
+            $db = Database::getInstance();
+
+            $stmtServico = $db->prepare('SELECT nome, preco FROM servicos WHERE id = :id');
+            $stmtServico->execute([':id' => $dados['servico_id']]);
+            $servico = $stmtServico->fetch();
+
+            $stmtBarbeiro = $db->prepare('SELECT nome FROM barbeiros WHERE id = :id');
+            $stmtBarbeiro->execute([':id' => $dados['barbeiro_id']]);
+            $barbeiro = $stmtBarbeiro->fetch();
+
+            require __DIR__ . "/../views/agendamento/pagamento.php";
+        }
+
+        public function confirmarPagamento(): void {
+            if (empty($_SESSION['agendamento_pendente'])) {
+                header('Location: /barbearia/agendamento/novo');
+                exit;
+            }
+
+            $formaPagamento = $_POST['forma_pagamento'] ?? 'dinheiro';
+            $formasValidas = ['dinheiro', 'pix', 'cartao'];
+
+            if (!in_array($formaPagamento, $formasValidas)) {
+                $formaPagamento = 'dinheiro';
+            }
+
+            $dados = $_SESSION['agendamento_pendente'];
+            $dados['forma_pagamento'] = $formaPagamento;
+            $dados['status_pagamento'] = 'pendente';
+
+            $this->model->criar($dados);
+
+            unset($_SESSION['agendamento_pendente']);
+
+            $_SESSION['sucesso'] = "Agendamento realizado com sucesso!";
+            header("Location: /barbearia/agendamento/meus");
+            exit;
         }
     }
 

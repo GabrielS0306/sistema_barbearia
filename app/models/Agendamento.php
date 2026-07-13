@@ -22,16 +22,18 @@
         }
 
         public function criar(array $dados): bool {
-            $sql = "INSERT INTO agendamentos (cliente_id, barbeiro_id, servico_id, data, hora)
-                    VALUES (:cid, :bid, :sid, :data, :hora)";
+            $sql = "INSERT INTO agendamentos (cliente_id, barbeiro_id, servico_id, data, hora, forma_pagamento, status_pagamento)
+                    VALUES (:cid, :bid, :sid, :data, :hora, :forma_pagamento, :status_pagamento)";
             $stmt = $this->db->prepare($sql);
 
             return $stmt->execute([
-                ':cid' => $dados['cliente_id'],
-                ':bid' => $dados['barbeiro_id'],
-                ':sid' => $dados['servico_id'],
-                ':data' => $dados['data'],
-                ':hora' => $dados['hora'],
+                ':cid'              => $dados['cliente_id'],
+                ':bid'              => $dados['barbeiro_id'],
+                ':sid'              => $dados['servico_id'],
+                ':data'             => $dados['data'],
+                ':hora'             => $dados['hora'],
+                ':forma_pagamento'  => $dados['forma_pagamento'],
+                ':status_pagamento' => $dados['status_pagamento']
             ]);
         }
 

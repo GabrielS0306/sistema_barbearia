@@ -45,6 +45,8 @@
     $router->post('/agendamento/novo', 'AgendamentoController::novo', ['cliente', 'admin']);
     $router->get('/agendamento/meus', 'AgendamentoController::meus', ['cliente', 'admin']);
     $router->get('/agendamento/comprovante', 'AgendamentoController::comprovante', ['cliente']);
+    $router->get('/agendamento/pagamento', 'AgendamentoController::pagamento', ['cliente']);
+    $router->post('/agendamento/confirmar-pagamento', 'AgendamentoController::confirmarPagamento', ['cliente']);
 
     // Rotas protegidas — barbeiro
     $router->get('/barbeiro/agenda', 'BarbeiroController::agenda', ['barbeiro', 'admin']);
