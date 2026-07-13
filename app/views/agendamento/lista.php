@@ -32,6 +32,7 @@
                     <th class="px-6 py-3 text-left">Preço</th>
                     <th class="px-6 py-3 text-left">Status</th>
                     <th class="px-6 py-3 text-left">Comprovante</th>
+                    <th class="px-6 py-3 text-left">Pagamento</th>
                 </tr>
             </thead>
 
@@ -49,23 +50,52 @@
                         <td class="px-6 py-4">
                             <?= date('d/m/Y', strtotime($ag['data'])) ?>
                         </td>
+
                         <td class="px-6 py-4">
                             <?= $ag['hora'] ?>
                         </td>
                         <td class="px-6 py-4 font-medium">
                             <?= htmlspecialchars($ag['barbeiro']) ?>
                         </td>
+
                         <td class="px-6 py-4 text-gray-400">
                             <?= htmlspecialchars($ag['servico']) ?>
                         </td>
                         <td class="px-6 py-4 text-amber-400">
                             R$ <?= number_format($ag['preco'], 2, ',', '.') ?>
                         </td>
+
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 rounded-full text-xs font-medium <?= $statusClasses ?>">
                                 <?= htmlspecialchars($ag['status']) ?>
                             </span>
                         </td>
+
+                        <td class="px-6 py-4">
+                            <?php
+                                $pagamentoClasses = match($ag['status_pagamento'] ?? 'pendente') {
+                                    'pago'      => 'bg-green-900 text-green-300',
+                                    'cancelado' => 'bg-red-900 text-red-300',
+                                    default     => 'bg-yellow-900 text-yellow-300',
+                                };
+
+                                $formaPagamento = match($ag['forma_pagamento'] ?? 'dinheiro') {
+                                    'pix'    => '📱 PIX',
+                                    'cartao' => '💳 Cartão',
+                                    default  => '💵 Dinheiro',
+                                };
+                            ?>
+                            <div class="flex flex-col gap-1">
+                                <span class="px-2 py-1 rounded-full text-xs font-medium <?= $pagamentoClasses ?> w-fit">
+                                    <?= ucfirst($ag['status_pagamento'] ?? 'pendente') ?>
+                                </span>
+
+                                <span class="text-gray-500 text-xs">
+                                    <?= $formaPagamento ?>
+                                </span>
+                            </div>
+                        </td>
+                        
                         <td class="px-6 py-4">
                             <a href="/barbearia/agendamento/comprovante?id=<?= $ag['id'] ?>" target="_blank" class="text-amber-400 hover:underline text-sm">
                                 PDF
