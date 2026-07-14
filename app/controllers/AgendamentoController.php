@@ -280,6 +280,64 @@
             header("Location: /barbearia/agendamento/meus");
             exit;
         }
+
+        public function cancelar(): void {
+            $id        = (int) ($_POST['id'] ?? 0);
+            $clienteId = $_SESSION['user_cliente_id'];
+
+            if (!$id) {
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            // Busca o agendamento pra validar que pertence ao cliente e pode ser cancelado 
+            $db = Database::getInstance();
+            $stmt = $db->prepare('SELECT * FROM agendamentos WHERE id = :id  AND cliente_id = :cid');
+            $stmt->execute([':id' => $id, ':cid' => $clienteId]);
+            $ag = $stmt->fetch();
+
+            if (!$ag) {
+                $_SESSION['erro'] = 'Agendamento não encontrado.';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            // Só pode cancelar se não tiver concluído ou cancelado 
+            if (in_array($ag['status'], ['concluido', 'cancelado'])) {
+                $_SESSION['erro'] = 'Este agendamento não pode ser cancelado.';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            // Só pode cancelar se a data não tiver passsado 
+            if ($ag['data'] < date('Y-m-d')) {
+                $_SESSION['erro'] = 'Não é possivel cancelar um agendamento passado.';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            // Atualiza status
+            $stausPagamento = $ag['status_pagamento'] === 'pago' ? 'cancelado' : 'cancelado';
+
+            $stmt = $db->prepare('UPDATE agendamentos 
+                                SET status = :status, status_pagamento = :sp 
+                                WHERE id = :id
+            ');
+            $stmt->execute([
+                ':status' => 'cancelado',
+                ':sp'     => $stausPagamento,
+                ':id'     => $id,
+            ]);
+
+            if ($ag['status_pagamento'] === 'pago') {
+                $_SESSION['sucesso'] = 'Agendamento cancelado. Entre em contato para solicitar o reembolso.';
+            } else {
+                $_SESSION['sucesso'] = 'Agendamento cancelado com sucesso.';
+            }
+
+            header('Location: /barbearia/agendamento/meus');
+            exit;
+        }
     }
 
 ?>

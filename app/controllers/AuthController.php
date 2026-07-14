@@ -111,13 +111,13 @@
                     ':senha' => $senhaHash,
                 ]);
 
-                $usuarioId = $db->lastInsertId();
+                $usuarioId = (int) $db->lastInsertId();
 
-                $stmt = $db->prepare("INSERT INTO clientes (usuario_id, nome, telefone) VALUES (:uid, :nome, '')");
-                $stmt->execute([
-                    ':uid'  => $usuarioId,
-                    ':nome' => $nome,
-                ]);
+                if (!$usuarioId) {
+                    $_SESSION['erro'] = 'Erro ao criar conta. Tente novamente.';
+                    header('Location: /barbearia/register');
+                    exit;
+                }
 
                 $_SESSION['sucesso'] = "Registro bem-sucedido! Faça login para continuar.";
                 header('Location: /barbearia/login');

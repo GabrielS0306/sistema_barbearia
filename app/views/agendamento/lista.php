@@ -33,6 +33,7 @@
                     <th class="px-6 py-3 text-left">Status</th>
                     <th class="px-6 py-3 text-left">Comprovante</th>
                     <th class="px-6 py-3 text-left">Pagamento</th>
+                    <th class="px-6 py-3 text-left">Ação</th>
                 </tr>
             </thead>
 
@@ -100,6 +101,21 @@
                             <a href="/barbearia/agendamento/comprovante?id=<?= $ag['id'] ?>" target="_blank" class="text-amber-400 hover:underline text-sm">
                                 PDF
                             </a>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <?php if (!in_array($ag['status'], ['concluido', 'cancelado']) && $ag['data'] >= date('Y-m-d')): ?>
+                                <form action="/barbearia/agendamento/cancelar" method="POST"
+                                    onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento?');">
+                                    <input type="hidden" name="id" value="<?= $ag['id'] ?>">
+
+                                    <button type="submit" class="text-red-400 hover:underline text-sm">
+                                        Cancelar
+                                    </button>
+                                </form>
+                            <?php else: ?>
+                                <span class="text-gray-600 text-sm">—</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
