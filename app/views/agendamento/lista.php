@@ -105,14 +105,23 @@
 
                         <td class="px-6 py-4">
                             <?php if (!in_array($ag['status'], ['concluido', 'cancelado']) && $ag['data'] >= date('Y-m-d')): ?>
-                                <form action="/barbearia/agendamento/cancelar" method="POST"
-                                    onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento?');">
-                                    <input type="hidden" name="id" value="<?= $ag['id'] ?>">
+                                <div class="flex gap-3">
+                                    <form action="/barbearia/agendamento/adiar" method="POST">
+                                        <input type="hidden" name="id" value="<?= $ag['id'] ?>">
 
-                                    <button type="submit" class="text-red-400 hover:underline text-sm">
-                                        Cancelar
-                                    </button>
-                                </form>
+                                        <button type="submit" class="text-amber-400 hover:underline text-sm">
+                                            Adiar
+                                        </button>
+                                    </form>
+
+                                    <form action="/barbearia/agendamento/cancelar" method="POST" onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento?');">
+                                        <input type="hidden" name="id" value="<?= $ag['id'] ?>">
+
+                                        <button type="submit" class="text-red-400 hover:underline text-sm">
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                </div>
                             <?php else: ?>
                                 <span class="text-gray-600 text-sm">—</span>
                             <?php endif; ?>

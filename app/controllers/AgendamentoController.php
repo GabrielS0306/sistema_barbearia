@@ -342,6 +342,72 @@
             header('Location: /barbearia/agendamento/meus');
             exit;
         }
+
+        public function adiar(): void {
+            $id        = (int) ($_POST['id'] ?? 0);
+            $clienteId = $_SESSION['user_cliente_id'];
+
+            if (!$id) {
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('SELECT * FROM agendamentos WHERE id = :id AND cliente_id = :cid');
+            $stmt->execute([':id' => $id, ':cid' => $clienteId]);
+            $ag = $stmt->fetch();
+
+            if (!$ag) {
+                $_SESSION['erro'] = 'Agendamento não encontrado.';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            if (in_array($ag['status'], ['concluido', 'cancelado'])) {
+                $_SESSION['erro'] = 'Este agendamento não pode ser adiado.';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            if ($ag['data'] < date('Y-m-d')) {
+                $_SESSION['erro'] = 'Não é possível adiar um agendamento passado.';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nova_data'])) {
+                $novaData = $_POST['nova_data'];
+                $novaHora = $_POST['nova_hora'];
+
+                if ($novaData < date('Y-m-d')) {
+                    $_SESSION['erro'] = 'A nova data não pode ser no passado.';
+                    header('Location: /barbearia/agendamento/adiar?id=' . $id);
+                    exit;
+                }
+
+                if (!$this->model->horarioDisponivel($ag['barbeiro_id'], $novaData, $novaHora)) {
+                    $_SESSION['erro'] = 'Horário indisponível. Escolha outro.';
+                    header('Location: /barbearia/agendamento/adiar?id=' . $id);
+                    exit;
+                }
+
+                $stmt = $db->prepare('UPDATE agendamentos SET data = :data, hora = :hora, status = :status WHERE id = :id');
+                $stmt->execute([
+                    ':data'   => $novaData,
+                    ':hora'   => $novaHora,
+                    ':status' => 'pendente',
+                    ':id'     => $id,
+                ]);
+
+                $_SESSION['sucesso'] = 'Agendamento adiado com sucesso!';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            // GET: exibe o formulário de adiamento
+            $_SESSION['agendamento_adiar'] = $ag;
+            require __DIR__ . '/../views/agendamento/adiar.php';
+        }
     }
 
 ?>
