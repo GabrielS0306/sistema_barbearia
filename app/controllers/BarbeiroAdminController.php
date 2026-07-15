@@ -125,15 +125,26 @@
             $id = (int) ($_POST['id'] ?? 0);
 
             if ($id) {
-                try {
-                    $this->model->deletar($id);
-                } catch (PDOException $e) {
-                    $_SESSION['erro'] = 'Não é possível excluir este barbeiro pois ele possui agendamentos vinculados.';
-                    header('Location: /barbearia/admin/barbeiros');
-                    exit;
-                }
+                $this->model->deletar($id);
+                $_SESSION['sucesso'] = 'Barbeiro desativado com sucesso.';
             }
 
+            header('Location: /barbearia/admin/barbeiros');
+            exit;
+        }
+
+        public function inativos(): void {
+            $barbeiros = $this->model->listarInativos();
+            
+            require __DIR__ . "/../views/admin/barbeiros-inativos.php";
+        }
+
+        public function reativar(): void {
+            $id = (int) ($_POST['id'] ?? 0);
+            if ($id) {
+                $this->model->reativar($id);
+                $_SESSION['sucesso'] = 'Barbeiro reativado com sucesso.';
+            }
             header('Location: /barbearia/admin/barbeiros');
             exit;
         }

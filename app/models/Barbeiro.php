@@ -9,8 +9,11 @@
         }
 
         public function listarTodos(): array {
-            $sql = "SELECT b.*, u.email FROM barbeiros b 
-                    JOIN usuarios u ON b.usuario_id = u.id";
+            $sql = "SELECT b.*, u.email 
+                    FROM barbeiros b 
+                    JOIN usuarios u ON b.usuario_id = u.id
+                    WHERE b.ativo = 1
+                    ORDER BY b.nome";
             
             $stmt = $this->db->query($sql);
             return $stmt->fetchAll();
@@ -50,7 +53,7 @@
         }
 
         public function deletar(int $id): bool {
-            $stmt = $this->db->prepare('DELETE FROM barbeiros WHERE id = :id');
+            $stmt = $this->db->prepare('UPDATE barbeiros SET ativo = 0 WHERE id = :id');
 
             return $stmt->execute([':id' => $id]);
         }
@@ -64,6 +67,24 @@
             $stmt = $this->db->query($sql);
 
             return $stmt->fetchAll();
+        }
+
+        public function listarInativos(): array {
+            $sql = 'SELECT b.*, u.email
+                    FROM barbeiros b
+                    JOIN usuarios u ON b.usuario_id = u.id
+                    WHERE b.ativo = 0
+                    ORDER BY b.nome';
+
+            $stmt = $this->db->query($sql);
+
+            return $stmt->fetchAll();
+        }
+
+        public function reativar(int $id): bool {
+            $stmt = $this->db->prepare('UPDATE barbeiros SET ativo = 1 WHERE id = :id');
+
+            return $stmt->execute([':id' => $id]);
         }
     }
 
