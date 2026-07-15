@@ -25,10 +25,9 @@
                 $usuario = $stmt->fetch();
                 
                 if ($usuario && password_verify($password, $usuario['senha'])) {
-                    $_SESSION['user_id'] = $usuario['id'];
+                    $_SESSION['user_id']   = $usuario['id'];
                     $_SESSION['user_role'] = $usuario['role'];
 
-                    // Grava o id do perfil específico na sessão conforme a role
                     if ($usuario['role'] === 'cliente') {
                         $stmt = $db->prepare("SELECT id FROM clientes WHERE usuario_id = :uid");
                         $stmt->execute([':uid' => $usuario['id']]);
@@ -70,12 +69,11 @@
 
         public function register(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $nome = trim($_POST['nome']) ?? '';
-                $email = trim($_POST['email']) ?? '';
-                $senha = $_POST['senha'] ?? '';
+                $nome           = trim($_POST['nome']) ?? '';
+                $email          = trim($_POST['email']) ?? '';
+                $senha          = $_POST['senha'] ?? '';
                 $confirmarSenha = $_POST['confirmar_senha'] ?? '';
 
-                // Validação PHP
                 if (empty($nome) || empty($email) || empty($senha) || empty($confirmarSenha)) {
                     $_SESSION['erro'] = 'Preencha todos os campos.';
                     header('Location: /barbearia/register');
@@ -88,15 +86,22 @@
                     exit;
                 }
 
+                if (strlen($senha) < 6) {
+                    $_SESSION['erro'] = 'A senha deve ter no mínimo 6 caracteres.';
+                    header('Location: /barbearia/register');
+                    exit;
+                }
+
                 if ($senha !== $confirmarSenha) {
                     $_SESSION['erro'] = "As senhas não coincidem.";
                     header('Location: /barbearia/register');
                     exit;
                 }
 
-                $db = Database::getInstance();
-                $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = :email");
-                $stmt->execute(['email' => $email]);
+                $db   = Database::getInstance();
+                $stmt = $db->prepare("SELECT id FROM usuarios WHERE email = :email");
+                $stmt->execute([':email' => $email]);
+                
                 if ($stmt->fetch()) {
                     $_SESSION['erro'] = "Email já cadastrado.";
                     header('Location: /barbearia/register');
@@ -118,6 +123,12 @@
                     header('Location: /barbearia/register');
                     exit;
                 }
+
+                $stmt = $db->prepare("INSERT INTO clientes (usuario_id, nome, telefone) VALUES (:uid, :nome, '')");
+                $stmt->execute([
+                    ':uid'  => $usuarioId,
+                    ':nome' => $nome,
+                ]);
 
                 $_SESSION['sucesso'] = "Registro bem-sucedido! Faça login para continuar.";
                 header('Location: /barbearia/login');
