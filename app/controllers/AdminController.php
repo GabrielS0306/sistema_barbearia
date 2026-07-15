@@ -145,6 +145,26 @@
                 </html>
             ";
         }
+
+        public function confirmarReembolso(): void {
+            $id = (int) ($_POST['id'] ?? 0);
+            if ($id) {
+                $db   = Database::getInstance();
+                $stmt = $db->prepare('
+                    UPDATE agendamentos 
+                    SET reembolso_solicitado = 0, 
+                        status_pagamento = :sp 
+                    WHERE id = :id
+                ');
+                $stmt->execute([
+                    ':sp' => 'cancelado',
+                    ':id' => $id,
+                ]);
+                $_SESSION['sucesso'] = 'Reembolso confirmado com sucesso.';
+            }
+            header('Location: /barbearia/admin/agendamentos');
+            exit;
+        }
     }
 
 ?>

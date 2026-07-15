@@ -136,6 +136,7 @@
                         <th class="px-6 py-3 text-left">Serviço</th>
                         <th class="px-6 py-3 text-left">Preço</th>
                         <th class="px-6 py-3 text-left">Status</th>
+                        <th class="px-6 py-3 text-left">Reembolso</th>
                     </tr>
                 </thead>
 
@@ -180,6 +181,26 @@
                                 <span class="px-2 py-1 rounded-full text-xs font-medium <?= $statusClasses ?>">
                                     <?= htmlspecialchars($ag['status']) ?>
                                 </span>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <?php if ($ag['reembolso_solicitado']): ?>
+                                    <form action="/barbearia/admin/reembolso/confirmar" method="POST">
+                                        <input type="hidden" name="id" value="<?= $ag['id'] ?>">
+
+                                        <div class="flex flex-col gap-1">
+                                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-orange-900 text-orange-300 w-fit">
+                                                Pendente
+                                            </span>
+
+                                            <button type="submit" onclick="return confirm('Confirmar reembolso processado?')" class="text-green-400 hover:underline text-xs mt-1">
+                                                Confirmar
+                                            </button>
+                                        </div>
+                                    </form>
+                                <?php else: ?>
+                                    <span class="text-gray-600 text-sm">—</span>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

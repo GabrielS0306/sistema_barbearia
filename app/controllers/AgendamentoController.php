@@ -316,21 +316,25 @@
                 exit;
             }
 
-            // Atualiza status
-            $stausPagamento = $ag['status_pagamento'] === 'pago' ? 'cancelado' : 'cancelado';
+            // verifica se precisa de reembolso 
+            $reembolsoSolicitado = $ag['status_pagamento'] === 'pago' ? 1 : 0;
 
-            $stmt = $db->prepare('UPDATE agendamentos 
-                                SET status = :status, status_pagamento = :sp 
-                                WHERE id = :id
+            $stmt = $db->prepare('UPDATE agendamentos
+                        SET status = :status,
+                            status_pagamento = :sp,
+                            reembolso_solicitado = :reembolso
+                        WHERE id = :id
             ');
+
             $stmt->execute([
                 ':status' => 'cancelado',
-                ':sp'     => $stausPagamento,
+                ':sp'     => 'cancelado',
+                ':reembolso' => $reembolsoSolicitado,
                 ':id'     => $id,
             ]);
 
-            if ($ag['status_pagamento'] === 'pago') {
-                $_SESSION['sucesso'] = 'Agendamento cancelado. Entre em contato para solicitar o reembolso.';
+            if ($reembolsoSolicitado) {
+                $_SESSION['sucesso'] = 'Agendamento cancelado. Reembolso solicitado — entraremos em contato em breve.';
             } else {
                 $_SESSION['sucesso'] = 'Agendamento cancelado com sucesso.';
             }
