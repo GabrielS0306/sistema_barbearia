@@ -274,6 +274,28 @@
 
             $this->model->criar($dados);
 
+            // Busca dados completos para enviar o e-mail
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('
+                SELECT a.*, c.nome AS cliente, b.nome AS barbeiro,
+                        s.nome AS servico, s.preco, u.email 
+                FROM agendamentos a
+                JOIN clientes c ON a.cliente_id = c.id
+                JOIN barbeiros b ON a.barbeiro_id = b.id
+                JOIN servicos s ON a.servico_id = s.id
+                JOIN usuarios u ON c.usuario_id = u.id
+                WHERE a.cliente_id = :cid
+                ORDER BY a.id DESC
+                LIMIT 1 
+            ');
+
+            $stmt->execute([':cid' => $dados['cliente_id']]);
+            $ag = $stmt->fetch();
+
+            if ($ag) {
+                Mailer::enviarConfirmacaoAgendamento($ag);
+            }
+
             unset($_SESSION['agendamento_pendente']);
 
             $_SESSION['sucesso'] = "Agendamento realizado com sucesso!";
@@ -332,6 +354,24 @@
                 ':reembolso' => $reembolsoSolicitado,
                 ':id'     => $id,
             ]);
+
+            // Busca dados completos pra enviar o e-mail
+            $stmt = $db->prepare('
+                SELECT a.*, c.nome AS cliente, b.nome AS barbeiro,
+                    s.nome AS servico, u.email
+                FROM agendamentos a
+                JOIN clientes c ON a.cliente_id = c.id
+                JOIN barbeiros b ON a.barbeiro_id = b.id
+                JOIN servicos s ON a.servico_id = s.id
+                JOIN usuarios u ON c.usuario_id = u.id
+                WHERE a.id = :id
+            ');
+            $stmt->execute([':id' => $id]);
+            $agEmail = $stmt->fetch();
+
+            if ($agEmail) {
+                Mailer::enviarCancelamentoAgendamento($agEmail);
+            }
 
             if ($reembolsoSolicitado) {
                 $_SESSION['sucesso'] = 'Agendamento cancelado. Reembolso solicitado — entraremos em contato em breve.';

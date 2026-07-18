@@ -6,7 +6,7 @@ public/uploads/*
 !public/uploads/.gitkeep
 
 config/database.php
-public/uploads/*
-!public/uploads/.gitkeep
+config/mail.php
+
 vendor/
 composer.phar
