@@ -55,6 +55,8 @@
 
     <!-- Seleção de forma de pagamento -->
     <form action="/barbearia/agendamento/confirmar-pagamento" method="POST">
+        <?= Csrf::campo() ?>
+
         <div class="flex flex-col gap-3 mb-6">
 
             <!-- Dinheiro -->

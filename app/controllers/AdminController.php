@@ -147,6 +147,8 @@
         }
 
         public function confirmarReembolso(): void {
+            Csrf::verificar();
+            
             $id = (int) ($_POST['id'] ?? 0);
             if ($id) {
                 $db   = Database::getInstance();

@@ -13,6 +13,8 @@
 
     <div class="flex items-end gap-3">
         <form action="/barbearia/barbeiro/agenda" method="GET" class="flex items-end gap-3">
+            <?= Csrf::campo() ?>
+            
             <div class="flex flex-col gap-1">
                 <label for="data" class="text-sm text-gray-400">Selecionar data</label>
                 <input type="date" id="data" name="data" value="<?= $data ?>"

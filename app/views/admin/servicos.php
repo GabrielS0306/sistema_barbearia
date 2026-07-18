@@ -60,6 +60,8 @@
                                     method="POST" 
                                     onsubmit="return confirm('Tem certeza que deseja excluir este serviço?');"
                                 >
+                                    <?= Csrf::campo() ?>
+                                    
                                     <input type="hidden" name="id" value="<?= $servico['id'] ?>">
                                     <button type="submit" class="text-red-400 hover:underline text-sm">Excluir</button>
                                 </form>

@@ -10,6 +10,8 @@
 
         public function novo(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+
                 $barbeiroId = (int) $_POST['barbeiro_id'];
                 $servicoID  = (int) $_POST['servico_id'];
                 $data       = $_POST['data'];
@@ -43,6 +45,7 @@
                 ];
 
                 header('Location: /barbearia/agendamento/pagamento');
+                exit;
             }
 
             // GET: Carrega barbeiros e serviços pra preencher o formulário
@@ -256,6 +259,8 @@
         }
 
         public function confirmarPagamento(): void {
+            Csrf::verificar();
+
             if (empty($_SESSION['agendamento_pendente'])) {
                 header('Location: /barbearia/agendamento/novo');
                 exit;
@@ -304,6 +309,8 @@
         }
 
         public function cancelar(): void {
+            Csrf::verificar();
+
             $id        = (int) ($_POST['id'] ?? 0);
             $clienteId = $_SESSION['user_cliente_id'];
 
@@ -384,6 +391,8 @@
         }
 
         public function adiar(): void {
+            Csrf::verificar();
+
             $id        = (int) ($_POST['id'] ?? 0);
             $clienteId = $_SESSION['user_cliente_id'];
 
@@ -416,6 +425,8 @@
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nova_data'])) {
+                Csrf::verificar();
+
                 $novaData = $_POST['nova_data'];
                 $novaHora = $_POST['nova_hora'];
 

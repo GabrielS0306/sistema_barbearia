@@ -15,6 +15,7 @@
     </h1>
 
     <form id="form-servico" action="/barbearia/admin/servicos/<?= $editando ? 'editar' : 'novo' ?>" method="POST" class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
+        <?= Csrf::campo() ?>
 
         <?php if ($editando): ?>
             <input type="hidden" name="id" value="<?= $servico['id'] ?? '' ?>">

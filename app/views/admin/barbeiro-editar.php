@@ -13,6 +13,7 @@
 
     <?php if ($barbeiro): ?>
         <form id="form-barbeiro-editar" action="/barbearia/admin/barbeiros/editar" method="POST" enctype="multipart/form-data" class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
+            <?= Csrf::campo() ?>
 
             <input type="hidden" name="id" value="<?= $barbeiro['id'] ?>">
 

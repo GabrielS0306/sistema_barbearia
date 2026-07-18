@@ -35,8 +35,8 @@ CREATE TABLE `barbeiros` (
   `usuario_id` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
   `especialidade` varchar(100) DEFAULT NULL,
-  `foto` varchar(255) DEFAULT NULL
-  `ativo` tinyint(1) DEFAULT 1,
+  `foto` varchar(255) DEFAULT NULL,
+  `ativo` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

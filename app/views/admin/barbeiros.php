@@ -67,6 +67,8 @@
 
                                 <form action="/barbearia/admin/barbeiros/deletar" method="POST"
                                     onsubmit="return confirm('Tem certeza que deseja desativar este barbeiro?');">
+                                    <?= Csrf::campo() ?>
+                                    
                                     <input type="hidden" name="id" value="<?= $barbeiro['id'] ?>">
 
                                     <button type="submit" class="text-red-400 hover:underline text-sm">

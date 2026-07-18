@@ -18,6 +18,8 @@
         // Formuláriopara cirar o USUÁRIO com role barbeiro 
         public function novoUsuario(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+
                 $email = trim($_POST['email']);
                 $senha = $_POST['senha'];
 
@@ -55,6 +57,8 @@
         // Formulário para vincular um usuário (role barbeiro) a um perfil de barbeiro
         public function novoPerfil(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+
                 $nomeArquivo = '';
 
                 if (!empty($_FILES['foto']['name'])) {
@@ -89,6 +93,8 @@
 
         public function editar(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+                
                 $id = (int) $_POST['id'];
 
                 $barbeiroAtual = $this->model->buscarPorId($id);

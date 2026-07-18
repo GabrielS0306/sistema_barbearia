@@ -23,6 +23,7 @@
 
     <form id="form-barbeiro-usuario" action="/barbearia/admin/barbeiros/novo-usuario" method="POST" 
         class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
+        <?= Csrf::campo() ?>
 
         <div class="flex flex-col gap-1">
             <label for="email" class="text-sm text-gray-400">Email</label>

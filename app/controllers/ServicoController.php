@@ -18,6 +18,8 @@
         // Exibe formulário (novo ou edição) e processa o envio
         public function form(): void {
             if ($_SERVER['REQUEST_METHOD'] === "POST") {
+                Csrf::verificar();
+
                 $dados = [
                     'nome'        => trim($_POST['nome']),
                     'descricao'   => trim($_POST['descricao']),
@@ -45,6 +47,8 @@
         }
 
         public function deletar() {
+            Csrf::verificar();
+
             $id = (int) ($_POST['id'] ?? 0);
 
             if ($id) {

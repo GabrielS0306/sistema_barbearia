@@ -72,6 +72,8 @@
 
                         <td class="px-6 py-4">
                             <form action="/barbearia/admin/barbeiros/reativar" method="POST" onsubmit="return confirm('Reativar este barbeiro?');">
+                                <?= Csrf::campo() ?>
+                                
                                 <input type="hidden" name="id" value="<?= $barbeiro['id'] ?>">
 
                                 <button type="submit" class="text-green-400 hover:underline text-sm">

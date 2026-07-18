@@ -3,6 +3,8 @@
     class AuthController {
         public function login(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+
                 $email = trim($_POST['email']) ?? '';
                 $password = $_POST['senha'] ?? '';
 
@@ -69,6 +71,8 @@
 
         public function register(): void {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+                
                 $nome           = trim($_POST['nome']) ?? '';
                 $email          = trim($_POST['email']) ?? '';
                 $senha          = $_POST['senha'] ?? '';

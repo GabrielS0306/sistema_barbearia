@@ -26,6 +26,7 @@
         </div>
     <?php else: ?>
         <form id="form-barbeiro-perfil" action="/barbearia/admin/barbeiros/novo-perfil" method="POST" enctype="multipart/form-data" class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
+            <?= Csrf::campo() ?>
 
             <div class="flex flex-col gap-1">
                 <label for="usuario_id" class="text-sm text-gray-400">Conta vinculada</label>

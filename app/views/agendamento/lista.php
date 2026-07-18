@@ -107,6 +107,8 @@
                             <?php if (!in_array($ag['status'], ['concluido', 'cancelado']) && $ag['data'] >= date('Y-m-d')): ?>
                                 <div class="flex gap-3">
                                     <form action="/barbearia/agendamento/adiar" method="POST">
+                                        <?= Csrf::campo() ?>
+
                                         <input type="hidden" name="id" value="<?= $ag['id'] ?>">
 
                                         <button type="submit" class="text-amber-400 hover:underline text-sm">
@@ -115,6 +117,8 @@
                                     </form>
 
                                     <form action="/barbearia/agendamento/cancelar" method="POST" onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento?');">
+                                        <?= Csrf::campo() ?>
+                                        
                                         <input type="hidden" name="id" value="<?= $ag['id'] ?>">
 
                                         <button type="submit" class="text-red-400 hover:underline text-sm">

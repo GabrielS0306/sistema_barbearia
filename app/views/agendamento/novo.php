@@ -28,6 +28,7 @@
 
     <form id="form-agendamento" action="/barbearia/agendamento/novo" method="POST"
         class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
+        <?= Csrf::campo() ?>
 
         <div class="flex flex-col gap-1">
             <label for="barbeiro_id" class="text-sm text-gray-400">Barbeiro</label>

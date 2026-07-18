@@ -72,6 +72,8 @@
 
     <!-- Filtros -->
     <form action="/barbearia/admin/agendamentos" method="GET" class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-wrap gap-3 mb-6">
+        <?= Csrf::campo() ?>
+
         <div class="flex flex-col gap-1 flex-1 min-w-[150px]">
             <label class="text-xs text-gray-400">Data</label>
 
