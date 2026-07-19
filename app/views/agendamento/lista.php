@@ -1,7 +1,12 @@
 <?php
 
     // app/views/agendamento/lista.php
+    /** @var Paginacao $paginacao */
+    /** @var array $filtros */
+    /** @var int $total */
     $agendamentos = $agendamentos ?? [];
+    $paginacao = $paginacao ?? null;
+    $total     = $total ?? 0;
     $titulo = 'Meus Agendamentos';
     require __DIR__ . '/../layouts/header.php';
 
@@ -134,6 +139,40 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <!-- Paginação -->
+        <?php if ($paginacao->totalPaginas() > 1): ?>
+            <div class="flex items-center justify-between mt-6 border-t border-gray-600 p-5">
+                <p class="text-gray-400 text-sm">
+                    Página <?= $paginacao->paginaAtual() ?> de <?= $paginacao->totalPaginas() ?>
+                    (<?= $total ?> agendamentos no total)
+                </p>
+
+                <div class="flex gap-2">
+                    <?php if ($paginacao->temAnterior()): ?>
+                        <a href="?pagina=<?= $paginacao->paginaAnterior() ?>"
+                            class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-lg transition text-sm">
+                            ← Anterior
+                        </a>
+                    <?php endif; ?>
+
+                    <?php foreach ($paginacao->paginas() as $pagina): ?>
+                        <a href="?pagina=<?= $pagina ?>"
+                            class="<?= $pagina === $paginacao->paginaAtual()
+                                ? 'bg-amber-400 text-gray-950'
+                                : 'bg-gray-800 hover:bg-gray-700 text-gray-300' ?> px-3 py-2 rounded-lg transition text-sm font-medium">
+                            <?= $pagina ?>
+                        </a>
+                    <?php endforeach; ?>
+
+                    <?php if ($paginacao->temProxima()): ?>
+                        <a href="?pagina=<?= $paginacao->proximaPagina() ?>"
+                            class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-lg transition text-sm">
+                            Próximo →
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 

@@ -57,9 +57,18 @@
         }
 
         public function meus(): void {
-            $clienteId = $_SESSION['user_cliente_id'];
-            $agendamentos = $this->model->buscarPorCliente($clienteId);
+            $clienteId    = $_SESSION['user_cliente_id'];
+            $paginaAtual  = (int) ($_GET['pagina'] ?? 1);
+            $porPagina    = 10;
 
+            $total        = $this->model->contarPorCliente($clienteId);
+            $paginacao    = new Paginacao($total, $porPagina, $paginaAtual);
+            $agendamentos = $this->model->buscarPorCliente(
+                $clienteId,
+                $paginacao->limite(),
+                $paginacao->offSet()
+            );
+            
             require __DIR__ . "/../views/agendamento/lista.php";
         }
 

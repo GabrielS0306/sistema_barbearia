@@ -24,8 +24,18 @@
                 'status'      => $_GET['status'] ?? '',
             ];
 
+            $paginaAtual = (int) ($_GET['pagina'] ?? '');
+            $porPagina    = 10;
 
-            $agendamentos = $modelAgendamento->buscarTodos($filtros);
+            $total     = $modelAgendamento->contarTodos($filtros);
+            $paginacao = new Paginacao($total, $porPagina, $paginaAtual);
+
+            $agendamentos = $modelAgendamento->buscarTodos(
+                $filtros,
+                $paginacao->limite(),
+                $paginacao->offSet(),
+            );
+
             $contagem = $modelAgendamento->contarPorStatus();
             $barbeiros = $modelBarbeiro->listarTodos();
 

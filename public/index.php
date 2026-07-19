@@ -13,6 +13,7 @@
     require_once __DIR__ . '/../core/Upload.php';
     require_once __DIR__ . '/../core/Mailer.php';
     require_once __DIR__ . '/../core/Csrf.php';
+    require_once __DIR__ . '/../core/Paginacao.php';
 
     // Autoload simples: carrega Models e Controllers automaticamente
     spl_autoload_register(function (string $class) {

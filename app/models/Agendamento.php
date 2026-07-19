@@ -51,21 +51,25 @@
             return $stmt->fetchAll();
         }
 
-        public function buscarPorCliente(int $clienteId): array {
+        public function buscarPorCliente(int $clienteId, int $limite = 10, int $offset = 0): array {
             $sql = 'SELECT a.*, b.nome AS barbeiro, s.nome AS servico, s.preco
                 FROM agendamentos a
                 JOIN barbeiros b ON a.barbeiro_id = b.id
                 JOIN servicos s ON a.servico_id = s.id
                 WHERE a.cliente_id = :cid
-                ORDER BY a.data DESC, a.hora DESC';
+                ORDER BY a.data DESC, a.hora DESC
+                LIMIT :limite OFFSET :offset';
 
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':cid' => $clienteId]);
+            $stmt->bindValue(':cid', $clienteId, PDO::PARAM_INT);
+            $stmt->bindValue(':limite', $clienteId, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $clienteId, PDO::PARAM_INT);
+            $stmt->execute();
 
             return $stmt->fetchAll();
         }
 
-        public function buscarTodos(array $filtros = []): array {
+        public function buscarTodos(array $filtros = [], int $limite = 10, int $offset = 0): array {
             $sql = 'SELECT a.*, 
                         c.nome AS cliente,
                         b.nome AS barbeiro,
@@ -94,10 +98,26 @@
                 $params[':status'] = $filtros['status'];
             }
 
+            $sql .= ' ORDER BY a.data DESC, a.hora DESC LIMIT :limite OFFSET :offset';
+
             $stmt = $this->db->prepare($sql);
-            $stmt->execute($params);
+
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+
+            $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
 
             return $stmt->fetchAll();
+        }
+
+        public function contarPorCliente(int $clienteId): int {
+            $stmt = $this->db->prepare('SELECT  COUNT(*) FROM agendamentos WHERE cliente_id = :cid');
+            $stmt->execute([':cid' => $clienteId]);
+
+            return (int) $stmt->fetchColumn();
         }
 
         public function contarPorStatus(): array {
@@ -140,6 +160,36 @@
             ]);
 
             return $stmt->fetchAll();
+        }
+
+        public function contarTodos(array $filtros = []): int {
+            $sql = 'SELECT COUNT(*) FROM agendamentos a
+                    JOIN clientes c ON a.cliente_id = c.id
+                    JOIN barbeiros b ON a.barbeiro_id = b.id
+                    JOIN servicos s ON a.servico_id = s.id
+                    WHERE 1 = 1';
+
+            $params = [];
+
+            if (!empty($filtros['data'])) {
+                $sql .= ' AND a.data = :data';
+                $params[':data'] = $filtros['data'];
+            }
+
+            if (!empty($filtros['barbeiro_id'])) {
+                $sql .= ' AND a.barbeiro_id = :barbeiro_id';
+                $params[':barbeiro_id'] = $filtros['barbeiro_id'];
+            }
+
+            if (!empty($filtros['status'])) {
+                $sql .= ' AND a.status = :status';
+                $params[':status'] = $filtros['status'];
+            }
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+
+            return (int) $stmt->fetchColumn();
         }
     }
 
