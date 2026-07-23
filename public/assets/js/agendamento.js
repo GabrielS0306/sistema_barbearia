@@ -1,6 +1,45 @@
 // public/assets/js/agendamento.js
-const formAgendamento = document.getElementById('form-agendamento');
+// SEM o DOMContentLoaded — o script já carrega com o DOM pronto
 
+const formAgendamento = document.getElementById('form-agendamento');
+const selectBarbeiro  = document.getElementById('barbeiro_id');
+const inputData       = document.getElementById('data');
+const selectHora      = document.getElementById('hora');
+
+async function carregarHorarios() {
+    const barbeiroId = selectBarbeiro.value;
+    const data       = inputData.value;
+
+    if (!barbeiroId || !data) return;
+
+    selectHora.innerHTML = '<option value="">Carregando...</option>';
+    selectHora.disabled  = true;
+
+    try {
+        const response = await fetch(`/barbearia/api/horarios?barbeiro_id=${barbeiroId}&data=${data}`);
+        const horarios = await response.json();
+
+        selectHora.innerHTML = '<option value="">Selecione um horário</option>';
+
+        horarios.forEach(h => {
+            const option       = document.createElement('option');
+            option.value       = h.hora;
+            option.textContent = h.disponivel ? h.hora : `${h.hora} — indisponível`;
+            option.disabled    = !h.disponivel;
+            selectHora.appendChild(option);
+        });
+
+        selectHora.disabled = false;
+    } catch (err) {
+        selectHora.innerHTML = '<option value="">Erro ao carregar horários</option>';
+        selectHora.disabled  = false;
+    }
+}
+
+if (selectBarbeiro) selectBarbeiro.addEventListener('change', carregarHorarios);
+if (inputData) inputData.addEventListener('change', carregarHorarios);
+
+// Validação do formulário
 if (formAgendamento) {
     formAgendamento.addEventListener('submit', function (e) {
         let valido = true;

@@ -86,13 +86,16 @@
                         </td>
                         <td class="px-6 py-4">
                             <form action="/barbearia/barbeiro/status" method="POST" class="flex gap-2 items-center">
+                                <?= Csrf::campo() ?>
                                 <input type="hidden" name="id" value="<?= $ag['id'] ?>">
+
                                 <select name="status"
                                     class="bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-gray-100 text-xs focus:outline-none focus:border-amber-400">
                                     <option value="confirmado" <?= $ag['status'] === 'confirmado' ? 'selected' : '' ?>>Confirmado</option>
                                     <option value="concluido" <?= $ag['status'] === 'concluido' ? 'selected' : '' ?>>Concluído</option>
                                     <option value="cancelado" <?= $ag['status'] === 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
                                 </select>
+
                                 <button type="submit"
                                     class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold px-3 py-1 rounded-lg transition text-xs">
                                     Salvar
