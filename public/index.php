@@ -61,6 +61,9 @@
     $router->get('/agendamento/adiar', 'AgendamentoController::adiar', ['cliente']);
     $router->post('/agendamento/adiar', 'AgendamentoController::adiar', ['cliente']);
 
+    $router->get('/cliente/perfil', 'ClienteController::perfil', ['cliente']);
+    $router->post('/cliente/perfil', 'ClienteController::perfil', ['cliente']);
+
     // Rotas protegidas — barbeiro
     $router->get('/barbeiro/agenda', 'BarbeiroController::agenda', ['barbeiro', 'admin']);
     $router->post('/barbeiro/status', 'BarbeiroController::atualizarStatus', ['barbeiro', 'admin']);

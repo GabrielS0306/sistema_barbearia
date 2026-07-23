@@ -44,6 +44,7 @@
                     <?php else: ?>
                         <a href="/barbearia/agendamento/novo" class="hover:text-amber-400 transition">Agendar</a>
                         <a href="/barbearia/agendamento/meus" class="hover:text-amber-400 transition">Meus Agendamentos</a>
+                        <a href="/barbearia/cliente/perfil" class="hover:text-amber-400 transition">Meu Perfil</a>
                     <?php endif; ?>
                     <a href="/barbearia/logout" class="text-red-400 hover:text-red-300 transition">Sair</a>
                 <?php endif; ?>
