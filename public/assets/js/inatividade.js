@@ -1,7 +1,7 @@
 // public/assets/js/inatividade.js
 
 const TEMPO_LIMITE = 15 * 60 * 1000; // 15 minutos
-const AVISO_ANTES  = 1 * 60 * 1000;  // avisa 1 minuto antes
+const AVISO_ANTES  = 1 * 60 * 1000;  // avisa 1 minuto antesj
 
 let timerLogout;
 let timerAviso;
