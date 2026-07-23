@@ -3,6 +3,15 @@
     // app/controllers/AdminController.php
     class AdminController {
         public function dashboard(): void {
+            $model = new Dashboard();
+
+            $totalClientes    = $model->totalClientes();
+            $totalBarbeiros   = $model->totalBarbeiros();
+            $agendamentosHoje = $model->agendamentosHoje();
+            $receiteMes       = $model->receitaMes();
+            $porStatus        = $model->agendamentoPorStatus();
+            $proximos         = $model->proximosAgendamentos();
+
             require __DIR__ . "/../views/admin/dashboard.php";
         }
 
