@@ -3,6 +3,7 @@
     // app/views/admin/servicos.php
     $servicos = $servicos ?? [];
     $titulo = 'Serviços';
+    $script = 'busca.js';
     require __DIR__ . '/../layouts/header.php';
 
 ?>
@@ -16,6 +17,12 @@
     >
         + Novo Serviço
     </a>
+</div>
+
+<!-- Campo de busca -->
+<div class="mb-4">
+    <input type="text" id="busca-servicos" placeholder="Buscar serviço..."
+        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:border-amber-400">
 </div>
 
 <?php if (empty($servicos)): ?>
@@ -35,7 +42,7 @@
                 </tr>
             </thead>
             
-            <tbody class="divide-y divide-gray-800">
+            <tbody id="tabela-servicos" class="divide-y divide-gray-800">
                 <?php foreach ($servicos as $servico): ?>
                     <tr class="hover:bg-gray-800 transition">
                         <td class="px-6 py-4 font-medium">

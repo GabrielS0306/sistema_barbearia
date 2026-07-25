@@ -2,6 +2,7 @@
     // app/views/admin/barbeiros.php
     $barbeiros = $barbeiros ?? [];
     $titulo = 'Barbeiros';
+    $script = 'busca.js';
     require __DIR__ . '/../layouts/header.php';
 ?>
 
@@ -15,6 +16,12 @@
     <a href="/barbearia/admin/barbeiros/novo-usuario" class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold px-4 py-2 rounded-lg transition text-sm">
         + Novo Barbeiro
     </a>
+</div>
+
+<!-- Campo de busca — adiciona aqui -->
+<div class="mb-4">
+    <input type="text" id="busca-barbeiros" placeholder="Buscar barbeiro..."
+        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:border-amber-400">
 </div>
 
 <?php if (empty($barbeiros)): ?>
