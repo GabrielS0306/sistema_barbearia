@@ -139,6 +139,57 @@
 
             $this->json(['mensagem' => 'Agendamento criado com sucesso'], 201);
         }
+
+        public function enviarLembretes(): void {
+            $tokenEsperado = 'barbearia2026_lembrete_xK9mP3qR7vN2wL5j'; // String aleatória pro endpoint
+            $tokenRecebido = $_GET['token'] ?? '';
+
+            if ($tokenRecebido !== $tokenEsperado) {
+                $this->json(['erro' => 'Não autorizado.'], 401);
+                return;
+            }
+
+            date_default_timezone_set('America/Sao_Paulo');
+
+            $amanha = date('Y-m-d', strtotime('+1 day'));
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare("
+                SELECT a.data, a.hora,
+                    c.nome AS cliente,
+                    b.nome AS barbeiro,
+                    s.nome AS servico,
+                    s.preco,
+                    u.email
+                FROM agendamentos a
+                JOIN clientes c  ON a.cliente_id  = c.id
+                JOIN barbeiros b ON a.barbeiro_id = b.id
+                JOIN servicos s  ON a.servico_id  = s.id
+                JOIN usuarios u  ON c.usuario_id  = u.id
+                WHERE a.data = :amanha
+                AND a.status NOT IN ('cancelado', 'concluido')
+            ");
+            $stmt->execute([':amanha' => $amanha]);
+            $agendamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $enviados = 0;
+            $erros    = 0;
+
+            foreach ($agendamentos as $ag) {
+                if (Mailer::enviarLembrete($ag)) {
+                    $enviados++;
+                } else {
+                    $erros++;
+                }
+            }
+
+            $this->json([
+                'mensagem' => 'Lembretes processados.',
+                'enviados' => $enviados,
+                'erros'    => $erros,
+                'data'     => $amanha,
+            ]);
+        }
     }
 
 ?>

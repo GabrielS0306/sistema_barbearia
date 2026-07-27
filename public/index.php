@@ -109,6 +109,7 @@
     $router->get('/api/horarios', 'ApiController::horarios');
     $router->get('/api/agendamentos', 'ApiController::agendamentos');
     $router->post('/api/agendamentos', 'ApiController::criarAgendamento');
+    $router->get('/api/lembretes', 'ApiController::enviarLembretes');
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';
