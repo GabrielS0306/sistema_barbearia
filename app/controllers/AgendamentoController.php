@@ -288,8 +288,25 @@
 
             $this->model->criar($dados);
 
-            // Busca dados completos para enviar o e-mail
+            // Realiza a instância com o banco de dados
             $db   = Database::getInstance();
+            
+            // Registra no histórico
+            $stmt = $db->prepare('SELECT id FROM agendamentos WHERE cliente_id = :cid ORDER BY id DESC LIMIT 1');
+            $stmt->execute([':cid' => $dados['cliente_id']]);
+            $novoAg = $stmt->fetch();
+
+            if ($novoAg) {
+                $historico = new AgendamentoHistorico();
+
+                $historico->registrar(
+                    $novoAg['id'],
+                    $_SESSION['user_id'],
+                    'criado',
+                    'Agendamento criado via sistema. Forma de pagamento: ' . $dados['forma_pagamento']
+                );
+            }
+
             $stmt = $db->prepare('
                 SELECT a.*, c.nome AS cliente, b.nome AS barbeiro,
                         s.nome AS servico, s.preco, u.email 
@@ -363,6 +380,14 @@
                             reembolso_solicitado = :reembolso
                         WHERE id = :id
             ');
+
+            $historico = new AgendamentoHistorico();
+            $historico->registrar(
+                $id,
+                $_SESSION['user_id'],
+                'cancelado',
+                $reembolsoSolicitado ? 'Agendamento cancelado pelo cliente. Reembolso solicitado.' : 'Agendamento cancelado pelo cliente.'
+            );
 
             $stmt->execute([
                 ':status' => 'cancelado',
@@ -458,6 +483,14 @@
                     ':status' => 'pendente',
                     ':id'     => $id,
                 ]);
+
+                $historico = new AgendamentoHistorico();
+                $historico->registrar(
+                    $id,
+                    $_SESSION['user_id'],
+                    'adiado',
+                    "Agendamento adiado de {$ag['data']} {$ag['hora']} para {$novaData} {$novaHora}."
+                );
 
                 $_SESSION['sucesso'] = 'Agendamento adiado com sucesso!';
                 header('Location: /barbearia/agendamento/meus');

@@ -142,6 +142,7 @@
                         <th class="px-6 py-3 text-left">Preço</th>
                         <th class="px-6 py-3 text-left">Status</th>
                         <th class="px-6 py-3 text-left">Reembolso</th>
+                        <th class="px-6 py-3 text-left">Histórico</th>
                     </tr>
                 </thead>
 
@@ -206,6 +207,13 @@
                                 <?php else: ?>
                                     <span class="text-gray-600 text-sm">—</span>
                                 <?php endif; ?>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <a href="/barbearia/admin/agendamentos/historico?id=<?= $ag['id'] ?>"
+                                    class="text-amber-400 hover:underline text-sm">
+                                    Ver
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

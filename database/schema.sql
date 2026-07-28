@@ -78,6 +78,18 @@ CREATE TABLE `usuarios` (
 -- Índices para tabelas despejadas
 --
 
+CREATE TABLE `agendamento_historico` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `agendamento_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `acao` enum('criado','confirmado','concluido','cancelado','adiado','reembolso_solicitado','reembolso_confirmado') NOT NULL,
+  `detalhes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`agendamento_id`) REFERENCES `agendamentos`(`id`),
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Índices de tabela `agendamentos`
 --

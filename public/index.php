@@ -103,6 +103,8 @@
 
     $router->post('/admin/reembolso/confirmar', 'AdminController::confirmarReembolso', ['admin']);
 
+    $router->get('/admin/agendamentos/historico', 'AdminController::historico', ['admin']);
+
     // Rotas da API
     $router->get('/api/barbeiros', 'ApiController::barbeiros');
     $router->get('/api/servicos', 'ApiController::servicos');

@@ -27,6 +27,15 @@
             if ($id && in_array($status, $statusPermitidos)) {
                 $db = Database::getInstance();
                 $stmt = $db->prepare("UPDATE agendamentos SET status = :status WHERE id = :id");
+
+                $historico = new AgendamentoHistorico();
+                $historico->registrar(
+                    $id,
+                    $_SESSION['user_id'],
+                    $status,
+                    "Status atualizado para '{$status}' pelo barbeiro."
+                );
+                
                 $stmt->execute([':status' => $status, ':id' => $id]);
             }
 

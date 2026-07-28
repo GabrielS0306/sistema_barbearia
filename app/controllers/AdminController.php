@@ -177,6 +177,15 @@
                         status_pagamento = :sp 
                     WHERE id = :id
                 ');
+
+                $historico = new AgendamentoHistorico();
+                $historico->registrar(
+                    $id,
+                    $_SESSION['user_id'],
+                    'reembolso_confirmado',
+                    'Reembolso confirmado pelo admin.'
+                );
+
                 $stmt->execute([
                     ':sp' => 'cancelado',
                     ':id' => $id,
@@ -185,6 +194,39 @@
             }
             header('Location: /barbearia/admin/agendamentos');
             exit;
+        }
+
+        public function historico(): void {
+            $id = (int) ($_GET['id'] ?? 0);
+
+            if (!$id) {
+                header('Location: /barbearia/admin/agendamentos');
+                exit;
+            }
+
+            $db = Database::getInstance();
+
+            $stmt = $db->prepare('
+                SELECT a.*, c.nome AS cliente, b.nome AS barbeiro, s.nome AS servico
+                FROM agendamentos a
+                JOIN clientes c  ON a.cliente_id  = c.id
+                JOIN barbeiros b ON a.barbeiro_id = b.id  
+                JOIN servicos s  ON a.servico_id  = s.id  
+                WHERE a.id = :id
+            ');
+
+            $stmt->execute([':id' => $id]);
+            $agendamento = $stmt->fetch();
+
+            if (!$agendamento) {
+                header('Location: /barbearia/admin/agendamentos');
+                exit;
+            }
+
+            $modelHistorico = new AgendamentoHistorico();
+            $historico      = $modelHistorico->buscarPorAgendamento($id);
+
+            require __DIR__ . '/../views/admin/agendamento-historico.php';
         }
     }
 
