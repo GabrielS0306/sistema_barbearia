@@ -44,6 +44,7 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - Painel de agendamentos com filtros por data, barbeiro e status
 - Confirmação de reembolso para agendamentos cancelados
 - Geração de relatório de agendamentos por período em PDF
+- Busca em tempo real nas listagens de serviços e barbeiros
 
 ### Barbeiro
 - Agenda do dia filtrável por data
@@ -58,6 +59,7 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - Adiamento de agendamento para nova data/hora
 - Download de comprovante de agendamento em PDF
 - Listagem de agendamentos com status de pagamento e paginação
+- Perfil editável (nome e telefone)
 
 ### Sistema
 - Arquitetura MVC sem framework
@@ -70,6 +72,8 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - E-mail de confirmação e cancelamento via PHPMailer
 - Interface responsiva com menu hambúrguer no mobile
 - Geração de PDFs com DOMPDF
+- Logout automático por inatividade com aviso de contagem regressiva
+- Lembrete de agendamento por e-mail 24h antes via cron-job.org
 
 ## 🗄️ Banco de Dados
 
@@ -114,6 +118,7 @@ cp config/mail.example.php config/mail.php
 | GET | `/api/horarios?barbeiro_id=X&data=Y` | Horários disponíveis |
 | GET | `/api/agendamentos` | Agendamentos do cliente logado |
 | POST | `/api/agendamentos` | Criar novo agendamento |
+| GET | `/api/lembretes?token=X` | Envia lembretes do dia seguinte (cron job) |
 
 ## 📁 Estrutura do projeto
 
@@ -134,7 +139,6 @@ barbearia/
 
 ## 🔮 Próximas funcionalidades
 
-- Perfil do cliente (atualizar nome e telefone)
+- Histórico de alterações dos agendamentos
 - Integração PIX via Mercado Pago
-- Lembrete automático por e-mail 24h antes do agendamento
 - Autenticação JWT para a API REST
