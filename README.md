@@ -60,6 +60,7 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - Download de comprovante de agendamento em PDF
 - Listagem de agendamentos com status de pagamento e paginação
 - Perfil editável (nome e telefone)
+- Pagamento via PIX com QR Code gerado dinamicamente e código copia-e-cola
 
 ### Sistema
 - Arquitetura MVC sem framework
@@ -77,7 +78,7 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 
 ## 🗄️ Banco de Dados
 
-- Script SQL: [`database/schema.sql`](database/schema.sql)
+- Script SQL: [`database/schema.sql`](database/schema.sql) (inclui tabela de histórico de alterações)
 - Diagrama: [`database/diagrama.png`](database/diagrama.png)
 
 ## 🔧 Como rodar localmente
@@ -139,6 +140,7 @@ barbearia/
 
 ## 🔮 Próximas funcionalidades
 
-- Histórico de alterações dos agendamentos
-- Integração PIX via Mercado Pago
+- Integração PIX com webhook do Mercado Pago (confirmação automática de pagamento)
 - Autenticação JWT para a API REST
+- Histórico de alterações visível para o cliente
+- App mobile consumindo a API REST
