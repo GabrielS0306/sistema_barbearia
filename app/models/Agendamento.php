@@ -62,8 +62,8 @@
 
             $stmt = $this->db->prepare($sql);
             $stmt->bindValue(':cid', $clienteId, PDO::PARAM_INT);
-            $stmt->bindValue(':limite', $clienteId, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', $clienteId, PDO::PARAM_INT);
+            $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
 
             return $stmt->fetchAll();
