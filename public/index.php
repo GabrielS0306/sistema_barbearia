@@ -14,6 +14,7 @@
     require_once __DIR__ . '/../core/Mailer.php';
     require_once __DIR__ . '/../core/Csrf.php';
     require_once __DIR__ . '/../core/Paginacao.php';
+    require_once __DIR__ . '/../core/Pix.php';
 
     // Autoload simples: carrega Models e Controllers automaticamente
     spl_autoload_register(function (string $class) {
@@ -63,6 +64,9 @@
 
     $router->get('/cliente/perfil', 'ClienteController::perfil', ['cliente']);
     $router->post('/cliente/perfil', 'ClienteController::perfil', ['cliente']);
+
+    $router->get('/agendamento/pix', 'AgendamentoController::pix', ['cliente']);
+    $router->post('/agendamento/pix', 'AgendamentoController::pix', ['cliente']);
 
     // Rotas protegidas — barbeiro
     $router->get('/barbeiro/agenda', 'BarbeiroController::agenda', ['barbeiro', 'admin']);

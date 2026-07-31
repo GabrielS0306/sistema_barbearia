@@ -7,6 +7,7 @@ public/uploads/*
 
 config/database.php
 config/mail.php
+config/pix.php
 
 vendor/
 composer.phar

@@ -268,18 +268,25 @@
         }
 
         public function confirmarPagamento(): void {
-            Csrf::verificar();
-
             if (empty($_SESSION['agendamento_pendente'])) {
                 header('Location: /barbearia/agendamento/novo');
                 exit;
             }
+            
+            Csrf::verificar();
 
             $formaPagamento = $_POST['forma_pagamento'] ?? 'dinheiro';
             $formasValidas = ['dinheiro', 'pix', 'cartao'];
 
             if (!in_array($formaPagamento, $formasValidas)) {
                 $formaPagamento = 'dinheiro';
+            }
+
+            // Se for PiX redireciona pra tela de QR Code antes de confirmar
+            if ($formaPagamento === 'pix') {
+                $_SESSION['agendamento_pendente']['forma_pagamento'] = 'pix';
+                header('Location: /barbearia/agendamento/pix');
+                exit;
             }
 
             $dados = $_SESSION['agendamento_pendente'];
@@ -500,6 +507,72 @@
             // GET: exibe o formulário de adiamento
             $_SESSION['agendamento_adiar'] = $ag;
             require __DIR__ . '/../views/agendamento/adiar.php';
+        }
+
+        public function pix(): void {
+            if (empty($_SESSION['agendamento_pendente'])) {
+                header('Location: /barbearia/agendamento/novo');
+                exit;
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+
+                $dados = $_SESSION['agendamento_pendente'];
+                $dados['forma_pagamento']  = 'pix';
+                $dados['status_pagamento'] = 'pendente';
+
+                $this->model->criar($dados);
+
+                $db   = Database::getInstance();
+                $stmt = $db->prepare('
+                    SELECT a.*, c.nome AS cliente, b.nome AS barbeiro,
+                        s.nome AS servico, s.preco, u.email
+                    FROM agendamentos a
+                    JOIN clientes c ON a.cliente_id = c.id
+                    JOIN barbeiros b ON a.barbeiro_id = b.id
+                    JOIN servicos s ON a.servico_id = s.id
+                    JOIN usuarios u ON c.usuario_id = u.id
+                    WHERE a.cliente_id = :cid
+                    ORDER BY a.id DESC
+                    LIMIT 1
+                ');
+
+                $stmt->execute([':cid' => $dados['cliente_id']]);
+                $ag = $stmt->fetch();
+
+                if ($ag) {
+                    Mailer::enviarConfirmacaoAgendamento($ag);
+
+                    $historico = new AgendamentoHistorico();
+                    $historico->registrar(
+                        $ag['id'],
+                        $_SESSION['user_id'],
+                        'criado',
+                        'Agendamento criado via PIX. Pagamento pendente de confirmação.'
+                    );
+                }
+
+                unset($_SESSION['agendamento_pendente']);
+
+                $_SESSION['sucesso'] = 'Agendamento realizado! Efetue o pagamento via PIX para confirmar.';
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            // GET: busca o preço do serviço pra gerar o QR Code 
+            $dados = $_SESSION['agendamento_pendente'];
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('SELECT preco, nome FROM servicos WHERE id = :id');
+            $stmt->execute([':id' => $dados['servico_id']]);
+            $servico = $stmt->fetch();
+
+            $pix = new Pix();
+            $qrCode = $pix->gerarQrCode((float) $servico['preco']);
+            $copiaCola = $pix->gerarCopiaCola((float) $servico['preco']);
+
+            require __DIR__ . '/../views/agendamento/pix.php';
         }
     }
 
