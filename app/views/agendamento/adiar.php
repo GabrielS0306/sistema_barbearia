@@ -12,14 +12,6 @@
 
     <p class="text-gray-400 mb-8">Escolha uma nova data e horário para o seu agendamento.</p>
 
-    <?php if (isset($_SESSION['erro'])): ?>
-        <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-6">
-            <?= htmlspecialchars($_SESSION['erro']) ?>
-
-            <?php unset($_SESSION['erro']); ?>
-        </div>
-    <?php endif; ?>
-
     <!-- Resumo do agendamento atual -->
     <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 mb-6">
         <h2 class="text-sm text-gray-400 uppercase mb-3">Agendamento atual</h2>

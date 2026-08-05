@@ -51,7 +51,7 @@ function mostrarAviso() {
     }, 1000);
 }
 
-function mostrarAviso() {
+function esconderAviso() {
     aviso.style.display = 'none';
     avisoVisivel = false;
 }
@@ -60,7 +60,7 @@ function fazerLogout() {
     window.location.href = '/barbearia/logout';
 }
 
-function resetarTime() {
+function resetarTimer() {
     clearTimeout(timerLogout);
     clearTimeout(timerAviso);
     esconderAviso();
@@ -79,7 +79,7 @@ function iniciarTimer() {
 
 // reseta o timer em qualquer interação do usuário
 ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evento => {
-    document.addEventListener(evento, resetarTime);
+    document.addEventListener(evento, resetarTimer);
 })
 
 // Inicia o timer após a página ser carregada

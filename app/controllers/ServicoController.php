@@ -35,6 +35,8 @@
                     $this->model->criar($dados);
                 }
 
+                $_SESSION['sucesso'] = 'Serviço atualizado com sucesso!';
+
                 header('Location: /barbearia/admin/servicos');
                 exit;
             }

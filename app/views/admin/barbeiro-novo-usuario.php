@@ -14,13 +14,6 @@
         <p class="text-gray-400 mt-1">Passo 1 de 2 — Criar conta de acesso</p>
     </div>
 
-    <?php if (isset($_SESSION['erro'])): ?>
-        <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-6">
-            <?= htmlspecialchars($_SESSION['erro']) ?>
-            <?php unset($_SESSION['erro']); ?>
-        </div>
-    <?php endif; ?>
-
     <form id="form-barbeiro-usuario" action="/barbearia/admin/barbeiros/novo-usuario" method="POST" 
         class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
         <?= Csrf::campo() ?>

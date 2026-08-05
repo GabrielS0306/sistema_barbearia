@@ -12,20 +12,6 @@
 <div class="max-w-lg mx-auto">
     <h1 class="text-3xl font-bold text-amber-400 mb-8">Agendar Horário</h1>
 
-    <?php if (isset($_SESSION['erro'])): ?>
-        <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-6">
-            <?= htmlspecialchars($_SESSION['erro']) ?>
-            <?php unset($_SESSION['erro']); ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if (isset($_SESSION['sucesso'])): ?>
-        <div class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-6">
-            <?= htmlspecialchars($_SESSION['sucesso']) ?>
-            <?php unset($_SESSION['sucesso']); ?>
-        </div>
-    <?php endif; ?>
-
     <form id="form-agendamento" action="/barbearia/agendamento/novo" method="POST"
         class="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col gap-5" novalidate>
         <?= Csrf::campo() ?>

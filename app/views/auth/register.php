@@ -9,13 +9,6 @@
 
 <div class="max-w-md mx-auto">
     <h1 class="text-3xl font-bold text-amber-400 mb-5 text-center">Criar Conta</h1>
-
-    <?php if (isset($_SESSION['erro'])): ?>
-        <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-6">
-            <?= htmlspecialchars($_SESSION['erro']) ?>
-            <?php unset($_SESSION['erro']); ?>
-        </div>
-    <?php endif; ?>
     
     <form id="form-register" action="/barbearia/register" method="POST" novalidate class="bg-gray-900 rounded-xl p-8 flex flex-col gap-3 border border-gray-800">
         <?= Csrf::campo(); ?>

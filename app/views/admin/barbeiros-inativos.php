@@ -19,14 +19,6 @@
     </a>
 </div>
 
-<?php if (isset($_SESSION['sucesso'])): ?>
-    <div class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-6">
-        <?= htmlspecialchars($_SESSION['sucesso']) ?>
-        
-        <?php unset($_SESSION['sucesso']); ?>
-    </div>
-<?php endif; ?>
-
 <?php if (empty($barbeiros)): ?>
     <div class="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center text-gray-500">
         Nenhum barbeiro inativo.

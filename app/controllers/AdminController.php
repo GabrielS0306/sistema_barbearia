@@ -48,6 +48,8 @@
             $contagem = $modelAgendamento->contarPorStatus();
             $barbeiros = $modelBarbeiro->listarTodos();
 
+            $_SESSION['sucesso'] = 'Tela de agendamentos carregada com sucesso.';
+
             require __DIR__ . "/../views/admin/agendamentos.php";
         }
 
