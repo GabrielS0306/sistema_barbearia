@@ -109,6 +109,8 @@
 
     $router->get('/admin/agendamentos/historico', 'AdminController::historico', ['admin']);
 
+    $router->post('/admin/agendamentos/confirmar-pix', 'AdminController::confirmarPix', ['admin']);
+
     // Rotas da API
     $router->get('/api/barbeiros', 'ApiController::barbeiros');
     $router->get('/api/servicos', 'ApiController::servicos');

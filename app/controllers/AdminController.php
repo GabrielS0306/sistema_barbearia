@@ -230,6 +230,44 @@
 
             require __DIR__ . '/../views/admin/agendamento-historico.php';
         }
+
+        public function confirmarPix(): void {
+            $id = (int) ($_POST['id'] ?? 0);
+
+            if ($id) {
+                $db   = Database::getInstance();
+
+                $stmt = $db->prepare('
+                    UPDATE agendamentos 
+                    SET status_pagamento = :sp,
+                        status = :status
+                    WHERE id = :id
+                    AND forma_pagamento = :fp
+                    AND status_pagamento = :sp_atual
+                ');
+
+                $stmt->execute([
+                    ':sp'      => 'pago',
+                    ':status'  => 'confirmado',
+                    ':id'      => $id,
+                    ':fp'      => 'pix',
+                    ':sp_atual' => 'pendente',
+                ]);
+
+                $historico = new AgendamentoHistorico();
+                $historico->registrar(
+                    $id,
+                    $_SESSION['user_id'],
+                    'pix_confirmado',
+                    'Pagamento via PIX confirmado pelo admin.'
+                );
+
+                $_SESSION['sucesso'] = 'Pagamento PIX confirmado com sucesso!';
+            }
+
+            header('Location: /barbearia/admin/agendamentos');
+            exit;
+        }
     }
 
 ?>
