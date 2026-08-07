@@ -86,6 +86,29 @@
             
             return $stmt->fetchAll();
         }
+
+        public function metricasPorBarbeiro(): array {
+            $stmt = $this->db->prepare("
+                SELECT 
+                    b.id,
+                    b.nome,
+                    COUNT(a.id) AS total_agendamentos,
+                    SUM(CASE WHEN a.status = 'concluido' THEN 1 ELSE 0 END) AS concluidos,
+                    SUM(CASE WHEN a.status = 'cancelado' THEN 1 ELSE 0 END) AS cancelados,
+                    SUM(CASE WHEN a.status = 'concluido' THEN s.preco ELSE 0 END) AS receita
+                FROM barbeiros b
+                LEFT JOIN agendamentos a ON a.barbeiro_id = b.id
+                    AND MONTH(a.data) = MONTH(CURDATE())
+                    AND YEAR(a.data) = YEAR(CURDATE())
+                LEFT JOIN servicos s ON a.servico_id = s.id
+                WHERE b.ativo = 1
+                GROUP BY b.id, b.nome
+                ORDER BY receita DESC
+            ");
+
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
     }
 
 ?>

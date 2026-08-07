@@ -1,12 +1,13 @@
 <?php
 
     // app/views/admin/dashboard.php
-    $totalClientes    = $totalClientes ?? 0;
-    $totalBarbeiros   = $totalBarbeiros ?? 0;
-    $agendamentosHoje = $agendamentosHoje ?? 0;
-    $receitaMes       = $receitaMes ?? 0;
-    $porStatus        = $porStatus ?? [];
-    $proximos         = $proximos ?? [];
+    $totalClientes     = $totalClientes ?? 0;
+    $totalBarbeiros    = $totalBarbeiros ?? 0;
+    $agendamentosHoje  = $agendamentosHoje ?? 0;
+    $receitaMes        = $receitaMes ?? 0;
+    $porStatus         = $porStatus ?? [];
+    $proximos          = $proximos ?? [];
+    $metricasBarbeiros = $metricasBarbeiros ?? [];
     $titulo           = 'Dashboard';
     require __DIR__ . '/../layouts/header.php';
 
@@ -145,6 +146,52 @@
         
         <p class="text-gray-500 text-sm mt-1">Visualize todos os agendamentos</p>
     </a>
+</div>
+
+<!-- Métricas por barbeiro -->
+<div class="mt-8">
+    <h2 class="text-xl font-bold mb-4">Desempenho dos Barbeiros — Mês atual</h2>
+    
+    <?php if (empty($metricasBarbeiros)): ?>
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center text-gray-500">
+            Nenhum barbeiro cadastrado.
+        </div>
+    <?php else: ?>
+        <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-800 text-gray-400 uppercase text-xs">
+                    <tr>
+                        <th class="px-6 py-3 text-left">Barbeiro</th>
+                        <th class="px-6 py-3 text-left">Agendamentos</th>
+                        <th class="px-6 py-3 text-left">Concluídos</th>
+                        <th class="px-6 py-3 text-left">Cancelados</th>
+                        <th class="px-6 py-3 text-left">Receita</th>
+                        <th class="px-6 py-3 text-left">Relatório</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-800">
+                    <?php foreach ($metricasBarbeiros as $b): ?>
+                        <tr class="hover:bg-gray-800 transition">
+                            <td class="px-6 py-4 font-medium"><?= htmlspecialchars($b['nome']) ?></td>
+                            <td class="px-6 py-4"><?= $b['total_agendamentos'] ?></td>
+                            <td class="px-6 py-4 text-green-400"><?= $b['concluidos'] ?></td>
+                            <td class="px-6 py-4 text-red-400"><?= $b['cancelados'] ?></td>
+                            <td class="px-6 py-4 text-amber-400 font-medium">
+                                R$ <?= number_format($b['receita'], 2, ',', '.') ?>
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="/barbearia/admin/relatorio/barbeiro?id=<?= $b['id'] ?>"
+                                    target="_blank"
+                                    class="text-amber-400 hover:underline text-sm">
+                                    PDF
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

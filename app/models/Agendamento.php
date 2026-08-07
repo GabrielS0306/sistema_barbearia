@@ -140,27 +140,35 @@
             return $contagem;
         }
 
-        public function buscarPorPeriodo(string $dataInicio, string $dataFim): array {
-            $sql = 'SELECT a.*,
-                        c.nome AS cliente,
-                        b.nome AS barbeiro,
-                        s.nome AS servico,
-                        s.preco
-                    FROM agendamentos a 
-                    JOIN clientes c ON a.cliente_id = c.id
-                    JOIN barbeiros b ON a.barbeiro_id = b.id
-                    JOIN servicos s ON a.servico_id = s.id
-                    WHERE a.data BETWEEN :data_inicio AND :data_fim
-                    ORDER BY a.data ASC, a.hora ASC';
+        public function buscarPorPeriodo(string $dataInicio, string $dataFim, int $barbeiroId = 0): array {
+        $sql = 'SELECT a.*,
+                    c.nome AS cliente,
+                    b.nome AS barbeiro,
+                    s.nome AS servico,
+                    s.preco
+                FROM agendamentos a 
+                JOIN clientes c ON a.cliente_id = c.id
+                JOIN barbeiros b ON a.barbeiro_id = b.id
+                JOIN servicos s ON a.servico_id = s.id
+                WHERE a.data BETWEEN :data_inicio AND :data_fim ';
 
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([
-                ':data_inicio' => $dataInicio,
-                ':data_fim' => $dataFim
-            ]);
+    $params = [
+        ':data_inicio' => $dataInicio,
+        ':data_fim' => $dataFim,
+    ];
 
-            return $stmt->fetchAll();
-        }
+    if ($barbeiroId > 0) {
+        $sql .= ' AND a.barbeiro_id = :barbeiro_id ';
+        $params[':barbeiro_id'] = $barbeiroId;
+    }
+
+    $sql .= ' ORDER BY a.data ASC, a.hora ASC';
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll();
+}
 
         public function contarTodos(array $filtros = []): int {
             $sql = 'SELECT COUNT(*) FROM agendamentos a

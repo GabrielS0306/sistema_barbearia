@@ -5,12 +5,13 @@
         public function dashboard(): void {
             $model = new Dashboard();
 
-            $totalClientes    = $model->totalClientes();
-            $totalBarbeiros   = $model->totalBarbeiros();
-            $agendamentosHoje = $model->agendamentosHoje();
-            $receiteMes       = $model->receitaMes();
-            $porStatus        = $model->agendamentoPorStatus();
-            $proximos         = $model->proximosAgendamentos();
+            $totalClientes     = $model->totalClientes();
+            $totalBarbeiros    = $model->totalBarbeiros();
+            $agendamentosHoje  = $model->agendamentosHoje();
+            $receiteMes        = $model->receitaMes();
+            $porStatus         = $model->agendamentoPorStatus();
+            $proximos          = $model->proximosAgendamentos();
+            $metricasBarbeiros = $model->metricasPorBarbeiro();
 
             require __DIR__ . "/../views/admin/dashboard.php";
         }
@@ -267,6 +268,134 @@
 
             header('Location: /barbearia/admin/agendamentos');
             exit;
+        }
+
+        public function relatorioBarbeiro(): void {
+            date_default_timezone_set('America/Sao_Paulo');
+
+            $barbeiroId = (int) ($_GET['id'] ?? 0);
+
+            if (!$barbeiroId) {
+                header('Location: /barbearia/admin/dashboard');
+                exit;
+            }
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('SELECT nome FROM barbeiros WHERE id = :id');
+            $stmt->execute([':id' => $barbeiroId]);
+            $barbeiro = $stmt->fetch();
+
+            if (!$barbeiro) {
+                header('Location: /barbearia/admin/dashboard');
+                exit;
+            }
+
+            $dataInicio = $_GET['data_inicio'] ?? date('Y-m-01');
+            $dataFim    = $_GET['data_fim'] ?? date('Y-m-d');
+
+            $model = new Agendamento();
+            $agendamentos = $model->buscarPorPeriodo($dataInicio, $dataFim, $barbeiroId);
+            $totalReceita = array_sum(array_column($agendamentos, 'preco'));
+            $totalCount = count($agendamentos);
+
+            $dompdf = new Dompdf\Dompdf();
+            $dompdf->loadHtml($this->gerarHtmlRelatorioBarbeiro($agendamentos, $barbeiro['nome'], $dataInicio, $dataFim, $totalReceita, $totalCount));
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            $dompdf->stream('relatorio-' . strtolower(str_replace(' ', '-', $barbeiro['nome'])) . '.pdf', ['Attachment' => false]);
+            exit;
+        }
+
+        private function gerarHtmlRelatorioBarbeiro(array $agendamentos, string $nomeBarbeiro, string $dataInicio, string $dataFim, float $totalReceita, int $totalCount): string {
+            $dataInicioFormatada   = date('d/m/Y', strtotime($dataInicio));
+            $dataFimFormatada      = date('d/m/Y', strtotime($dataFim));
+            $totalReceitaFormatado = 'R$ ' . number_format($totalReceita, 2, ',', '.');
+
+            $linhas = '';
+            foreach ($agendamentos as $ag) {
+                $data  = date('d/m/Y', strtotime($ag['data']));
+                $hora  = substr($ag['hora'], 0, 5);
+                $preco = 'R$ ' . number_format($ag['preco'], 2, ',', '.');
+                $linhas .= "
+                <tr>
+                    <td>{$data}</td>
+                    <td>{$hora}</td>
+                    <td>{$ag['cliente']}</td>
+                    <td>{$ag['servico']}</td>
+                    <td>{$preco}</td>
+                    <td>{$ag['status']}</td>
+                </tr>";
+            }
+
+            return "
+                <!DOCTYPE html>
+                <html lang='pt-br'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <style>
+                        body { font-family: Arial, sans-serif; color: #1a1a1a; padding: 40px; font-size: 13px; }
+                        .header { text-align: center; border-bottom: 3px solid #f59e0b; padding-bottom: 20px; margin-bottom: 30px; }
+                        .header h1 { color: #f59e0b; font-size: 26px; margin: 0; }
+                        .header p { color: #666; margin: 5px 0 0; }
+                        .barbeiro { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; }
+                        .barbeiro p { margin: 0; font-size: 14px; color: #92400e; }
+                        .resumo { display: flex; gap: 20px; margin-bottom: 25px; }
+                        .card { flex: 1; border: 1px solid #eee; border-radius: 8px; padding: 12px; text-align: center; }
+                        .card .valor { font-size: 22px; font-weight: bold; color: #f59e0b; }
+                        .card .label { font-size: 11px; color: #666; margin-top: 4px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        thead tr { background: #f59e0b; color: #1a1a1a; }
+                        thead td { padding: 8px 6px; font-weight: bold; font-size: 11px; }
+                        tbody tr:nth-child(even) { background: #f9f9f9; }
+                        tbody td { padding: 7px 6px; border-bottom: 1px solid #eee; font-size: 12px; }
+                        .footer { margin-top: 30px; text-align: center; color: #999; font-size: 11px; border-top: 1px solid #eee; padding-top: 15px; }
+                    </style>
+                </head>
+                <body>
+                    <div class='header'>
+                        <h1>Barbearia</h1>
+                        <p>Relatório por Barbeiro</p>
+                    </div>
+
+                    <div class='barbeiro'>
+                        <p>Barbeiro: <strong>{$nomeBarbeiro}</strong></p>
+                        <p>Período: <strong>{$dataInicioFormatada}</strong> até <strong>{$dataFimFormatada}</strong></p>
+                    </div>
+
+                    <div class='resumo'>
+                        <div class='card'>
+                            <div class='valor'>{$totalCount}</div>
+                            <div class='label'>Total de Agendamentos</div>
+                        </div>
+                        <div class='card'>
+                            <div class='valor'>{$totalReceitaFormatado}</div>
+                            <div class='label'>Receita Total</div>
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Data</td>
+                                <td>Hora</td>
+                                <td>Cliente</td>
+                                <td>Serviço</td>
+                                <td>Preço</td>
+                                <td>Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {$linhas}
+                        </tbody>
+                    </table>
+
+                    <div class='footer'>
+                        <p>Relatório gerado em " . date('d/m/Y H:i') . "</p>
+                        <p>barb-system.rf.gd</p>
+                    </div>
+                </body>
+                </html>
+            ";
         }
     }
 
