@@ -113,6 +113,9 @@
 
     $router->get('/admin/relatorio/barbeiro', 'AdminController::relatorioBarbeiro', ['admin']);
 
+    $router->get('/admin/horarios', 'AdminController::horarios', ['admin']);
+    $router->post('/admin/horarios', 'AdminController::horarios', ['admin']);
+
     // Rotas da API
     $router->get('/api/barbeiros', 'ApiController::barbeiros');
     $router->get('/api/servicos', 'ApiController::servicos');

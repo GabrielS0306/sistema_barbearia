@@ -397,6 +397,34 @@
                 </html>
             ";
         }
+
+        public function horarios(): void {
+            $model = new HorarioFuncionamento();
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+
+                $ids     = $_POST['id'] ?? [];
+                $inicios = $_POST['hora_inicio'] ?? [];
+                $fins    = $_POST['hora_fim'] ?? [];
+                $ativos  = $_POST['ativo'] ?? [];
+
+                foreach ($ids as $i => $id) {
+                    $model->atualizar((int) $id, [
+                        'hora_inicio' => $inicios[$i],
+                        'hora_fim'    => $fins[$i],
+                        'ativo'       => isset($ativos[$i]) ? 1 : 0,
+                    ]);
+                }
+
+                $_SESSION['sucesso'] = 'Horários de funcionamento atualizados!';
+                header('Location: /barbearia/admin/horarios');
+                exit;
+            }
+
+            $horarios = $model->listarTodos();
+            require __DIR__ . '/../views/admin/horarios.php';
+        }
     }
 
 ?>

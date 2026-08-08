@@ -60,17 +60,24 @@
                 return;
             }
 
-            $model = new Agendamento();
-            $horarios = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
-                        '11:00', '11:30', '13:00', '13:30', '14:00', '14:30',
-                        '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
+            $modelAgendamento   = new Agendamento();
+            $modelFuncionamento = new HorarioFuncionamento();
+
+            // busca horários dentro do funcionamento
+            $horariosDisponiveis = $modelFuncionamento->horariosDisponiveis($data);
+
+            // Se não tiver horários disponiveis nesse dia
+            if (empty($horariosDisponiveis)) {
+                $this->json([]);
+                return;
+            }
 
             $dados = array_map(fn($h) => [
                 'hora'       => $h,
-                'disponivel' => $model->horarioDisponivel($barbeiroId, $data, $h),
-            ], $horarios);
+                'disponivel' => $modelAgendamento->horarioDisponivel($barbeiroId, $data, $h),
+            ], $horariosDisponiveis);
 
-            $this->json($dados);
+            $this->json(array_values($dados));
         }
 
         public function agendamentos():void {

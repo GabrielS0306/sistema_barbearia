@@ -146,6 +146,14 @@
         
         <p class="text-gray-500 text-sm mt-1">Visualize todos os agendamentos</p>
     </a>
+
+    <a href="/barbearia/admin/horarios" class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-400 transition group">
+        <div class="text-amber-400 text-3xl mb-3">🕐</div>
+
+        <h2 class="text-xl font-bold group-hover:text-amber-400 transition">Horários</h2>
+        
+        <p class="text-gray-500 text-sm mt-1">Configure o funcionamento</p>
+    </a>
 </div>
 
 <!-- Métricas por barbeiro -->

@@ -90,6 +90,24 @@ CREATE TABLE `agendamento_historico` (
   FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `horarios_funcionamento` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dia_semana` tinyint(1) NOT NULL COMMENT '0=domingo, 1=segunda, ..., 6=sabado',
+  `hora_inicio` time NOT NULL,
+  `hora_fim` time NOT NULL,
+  `ativo` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Insere horários padrão (seg-sex 08:00-18:00, sab 08:00-13:00)
+INSERT INTO horarios_funcionamento (dia_semana, hora_inicio, hora_fim) VALUES
+(1, '08:00:00', '18:00:00'),
+(2, '08:00:00', '18:00:00'),
+(3, '08:00:00', '18:00:00'),
+(4, '08:00:00', '18:00:00'),
+(5, '08:00:00', '18:00:00'),
+(6, '08:00:00', '13:00:00');
+
 --
 -- Índices de tabela `agendamentos`
 --
