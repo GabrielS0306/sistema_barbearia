@@ -197,6 +197,27 @@
                 'data'     => $amanha,
             ]);
         }
+
+        public function servicosPorBarbeiro(): void {
+            $barbeiroId = (int) ($_GET['barbeiro_id'] ?? 0);
+
+            if (!$barbeiroId) {
+                $this->erro('Informe barbeiro_id');
+                return;
+            }
+
+            $model = new Barbeiro();
+            $servicos = $model->buscarServicos($barbeiroId);
+
+            $dados = array_map(fn($s) => [
+                'id'            => $s['id'],
+                'nome'          => $s['nome'],
+                'preco'         => (float) $s['preco'],
+                'duracao_min'   => (int) $s['duracao_min'],
+            ], $servicos);
+
+            $this->json($dados);
+        }
     }
 
 ?>

@@ -86,6 +86,38 @@
 
             return $stmt->execute([':id' => $id]);
         }
+
+        public function buscarServicos(int $barbeiroId): array {
+            $stmt = $this->db->prepare('
+                SELECT s.* FROM servicos s
+                JOIN barbeiro_servicos bs ON bs.servico_id = s.id
+                WHERE bs.barbeiro_id = :id
+                ORDER BY s.nome
+            ');
+
+            $stmt->execute([':id' => $barbeiroId]);
+            return $stmt->fetchAll();
+        }
+
+        public function atualizarServicos(int $barbeiroId, array $servicoIds): bool {
+            // Remove todos os servicos atuais
+            $stmt = $this->db->prepare('DELETE FROM barbeiro_servicos WHERE barbeiro_id = :id');
+            $stmt->execute([':id' => $barbeiroId]);
+
+            // Insere novos 
+            if(!empty($servicoIds)) {
+                $stmt = $this->db->prepare('
+                    INSERT INTO barbeiro_servicos (barbeiro_id, servico_id) 
+                    VALUES (:bid, :sid)
+                ');
+
+                foreach ($servicoIds as $servicoId) {
+                    $stmt->execute([':bid' => $barbeiroId, ':sid' => $servicoId]);
+                }
+            }
+
+            return true;
+        }
     }
 
 ?>

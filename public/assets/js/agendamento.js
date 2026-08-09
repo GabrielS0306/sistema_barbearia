@@ -36,8 +36,43 @@ async function carregarHorarios() {
     }
 }
 
-if (selectBarbeiro) selectBarbeiro.addEventListener('change', carregarHorarios);
-if (inputData) inputData.addEventListener('change', carregarHorarios);
+async function carregarServicos() {
+    const barbeiroId = selectBarbeiro.value;
+    const selectServico = document.getElementById('servico_id');
+
+    if (!barbeiroId) {
+        selectServico.innerHTML = '<option value="">Selecione um serviço</option>';
+        return;
+    }
+
+    selectServico.innerHTML = '<option value="">Carregando...</option>';
+    selectServico.disabled  = true;
+
+    try {
+        const response = await fetch(`/barbearia/api/servicos/barbeiro?barbeiro_id=${barbeiroId}`);
+        const servicos = await response.json();
+
+        selectServico.innerHTML = '<option value="">Selecione um serviço</option>';
+
+        servicos.forEach(s => {
+            const option       = document.createElement('option');
+            option.value       = s.id;
+            option.textContent = `${s.nome} — R$ ${s.preco.toFixed(2).replace('.', ',')} (${s.duracao_min}min)`;
+            selectServico.appendChild(option);
+        });
+
+        selectServico.disabled = false;
+    } catch (err) {
+        selectServico.innerHTML = '<option value="">Erro ao carregar serviços</option>';
+        selectServico.disabled  = false;
+    }
+}
+
+// Adiciona o evento no selectBarbeiro
+if (selectBarbeiro) selectBarbeiro.addEventListener('change', function() {
+    carregarServicos();
+    carregarHorarios();
+});
 
 // Validação do formulário
 if (formAgendamento) {

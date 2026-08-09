@@ -154,6 +154,35 @@
             header('Location: /barbearia/admin/barbeiros');
             exit;
         }
+
+        public function servicos(): void {
+            $id = (int) ($_GET['id'] ?? 0);
+
+            if (!$id) {
+                header('Location: /barbearia/admin/barbeiros');
+                exit;
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                Csrf::verificar();
+
+                $servicosIds = $_POST['servicos'] ?? [];
+                $this->model->atualizarServicos($id, $servicosIds);
+
+                $_SESSION['sucesso'] = 'Serviços atualizados com sucesso.';
+                header("Location: /barbearia/admin/barbeiros/");
+                exit;
+            }
+
+            $barbeiro         = $this->model->buscarPorId($id);
+            $servicosBarbeiro = $this->model->buscarServicos($id);
+            $idsBarbeiro      = array_column($servicosBarbeiro, 'id');
+
+            $modelServico  = new Servico();
+            $todosServicos = $modelServico->listarTodos();
+
+            require __DIR__ . "/../views/admin/barbeiro-servicos.php";
+        }
     }
 
 ?>

@@ -116,6 +116,9 @@
     $router->get('/admin/horarios', 'AdminController::horarios', ['admin']);
     $router->post('/admin/horarios', 'AdminController::horarios', ['admin']);
 
+    $router->get('/admin/barbeiros/servicos', 'BarbeiroAdminController::servicos', ['admin']);
+    $router->post('/admin/barbeiros/servicos', 'BarbeiroAdminController::servicos', ['admin']);
+
     // Rotas da API
     $router->get('/api/barbeiros', 'ApiController::barbeiros');
     $router->get('/api/servicos', 'ApiController::servicos');
@@ -123,6 +126,7 @@
     $router->get('/api/agendamentos', 'ApiController::agendamentos');
     $router->post('/api/agendamentos', 'ApiController::criarAgendamento');
     $router->get('/api/lembretes', 'ApiController::enviarLembretes');
+    $router->get('/api/servicos/barbeiro', 'ApiController::servicosPorBarbeiro');
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';

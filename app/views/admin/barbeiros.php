@@ -72,6 +72,9 @@
                                 <a href="/barbearia/admin/barbeiros/editar?id=<?= $barbeiro['id'] ?>"
                                     class="text-amber-400 hover:underline text-sm">Editar</a>
 
+                                <a href="/barbearia/admin/barbeiros/servicos?id=<?= $barbeiro['id'] ?>"
+                                    class="text-blue-400 hover:underline text-sm">Serviços</a>
+
                                 <form action="/barbearia/admin/barbeiros/deletar" method="POST"
                                     onsubmit="return confirm('Tem certeza que deseja desativar este barbeiro?');">
                                     <?= Csrf::campo() ?>

@@ -1,18 +1,20 @@
 <?php
-// app/views/admin/horarios.php
-$horarios = $horarios ?? [];
-$titulo   = 'Horários de Funcionamento';
-require __DIR__ . '/../layouts/header.php';
 
-$dias = [
-    0 => 'Domingo',
-    1 => 'Segunda-feira',
-    2 => 'Terça-feira',
-    3 => 'Quarta-feira',
-    4 => 'Quinta-feira',
-    5 => 'Sexta-feira',
-    6 => 'Sábado',
-];
+    // app/views/admin/horarios.php
+    $horarios = $horarios ?? [];
+    $titulo   = 'Horários de Funcionamento';
+    require __DIR__ . '/../layouts/header.php';
+
+    $dias = [
+        0 => 'Domingo',
+        1 => 'Segunda-feira',
+        2 => 'Terça-feira',
+        3 => 'Quarta-feira',
+        4 => 'Quinta-feira',
+        5 => 'Sexta-feira',
+        6 => 'Sábado',
+    ];
+
 ?>
 
 <div class="mb-8">
@@ -34,6 +36,7 @@ $dias = [
                         <input type="checkbox" name="ativo[<?= $i ?>]" value="1"
                             <?= $h['ativo'] ? 'checked' : '' ?>
                             class="accent-amber-400 w-4 h-4">
+
                         <span class="font-medium text-sm"><?= $dias[$h['dia_semana']] ?></span>
                     </label>
                 </div>
@@ -41,6 +44,7 @@ $dias = [
                 <div class="flex items-center gap-2 flex-1">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs text-gray-400">Abertura</label>
+
                         <input type="time" name="hora_inicio[]"
                             value="<?= substr($h['hora_inicio'], 0, 5) ?>"
                             class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-gray-100 text-sm focus:outline-none focus:border-amber-400">
@@ -50,6 +54,7 @@ $dias = [
 
                     <div class="flex flex-col gap-1">
                         <label class="text-xs text-gray-400">Fechamento</label>
+
                         <input type="time" name="hora_fim[]"
                             value="<?= substr($h['hora_fim'], 0, 5) ?>"
                             class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-gray-100 text-sm focus:outline-none focus:border-amber-400">
@@ -66,8 +71,7 @@ $dias = [
     </div>
 
     <div class="mt-6">
-        <button type="submit"
-            class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold px-6 py-2 rounded-lg transition">
+        <button type="submit" class="bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold px-6 py-2 rounded-lg transition">
             Salvar Horários
         </button>
     </div>
