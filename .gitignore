@@ -2,6 +2,8 @@ config/database.php
 .vscode/
 *.log
 
+logs/*.log
+
 public/uploads/*
 !public/uploads/.gitkeep
 

@@ -8,13 +8,17 @@
     // public/index.php
 
     // carrega classes de infraestrutura
-    require_once __DIR__ . '/../core/Database.php';
+    require_once __DIR__ . '/../core/Pix.php';
+    require_once __DIR__ . '/../core/Csrf.php';
     require_once __DIR__ . '/../core/Router.php';
     require_once __DIR__ . '/../core/Upload.php';
     require_once __DIR__ . '/../core/Mailer.php';
-    require_once __DIR__ . '/../core/Csrf.php';
+    require_once __DIR__ . '/../core/Logger.php';
+    require_once __DIR__ . '/../core/Database.php';
     require_once __DIR__ . '/../core/Paginacao.php';
-    require_once __DIR__ . '/../core/Pix.php';
+
+    // Ativa captura automática de erros e exceções
+    Logger::capturarExcecoes();
 
     // Autoload simples: carrega Models e Controllers automaticamente
     spl_autoload_register(function (string $class) {
@@ -118,6 +122,8 @@
 
     $router->get('/admin/barbeiros/servicos', 'BarbeiroAdminController::servicos', ['admin']);
     $router->post('/admin/barbeiros/servicos', 'BarbeiroAdminController::servicos', ['admin']);
+
+    $router->get('/admin/logs', 'AdminController::logs', ['admin']);
 
     // Rotas da API
     $router->get('/api/barbeiros', 'ApiController::barbeiros');

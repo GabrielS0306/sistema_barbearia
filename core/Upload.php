@@ -8,14 +8,17 @@
         public static function salvarImagem(array $arquivo, string $pastaDestino): string|false {
             // Verifica se o upload em si não teve problema técnico
             if ($arquivo['error'] !== UPLOAD_ERR_OK) {
+                Logger::aviso('Erro no upload de imagem', ['error_code' => $arquivo['error']]);
                 return false;
             }
 
             if (!in_array($arquivo['type'], self::TIPOS_PERMITIDOS)) {
+                Logger::aviso('Tipo de arquivo não permitido', ['tipo' => $arquivo['type']]);
                 return false;
             }
 
             if ($arquivo['size'] > self::TAMANHO_MAXIMO) {
+                Logger::aviso('Tamanho de arquivo excedido', ['size' => $arquivo['size']]);
                 return false;
             }
 

@@ -425,6 +425,19 @@
             $horarios = $model->listarTodos();
             require __DIR__ . '/../views/admin/horarios.php';
         }
+
+        public function logs(): void {
+            $arquivo = __DIR__ . '/../../logs/app-' . date('Y-m-d') . '.log';
+            $linhas  = [];
+
+            if (file_exists($arquivo)) {
+                $conteudo = file_get_contents($arquivo);
+                $linhas = array_filter(explode(PHP_EOL, $conteudo));
+                $linhas = array_reverse(array_values($linhas)); // Mais recentes primeiro
+            }
+
+            require __DIR__ . '/../views/admin/logs.php';
+        }
     }
 
 ?>

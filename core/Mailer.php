@@ -36,8 +36,11 @@
                 $mail->send();
 
                 return true;
-            } catch (Exception $erro) {
-                error_log('Erro ao enviar e-mail' .  $erro->getMessage());
+            } catch (Exception $e) {
+                Logger::erro('Erro ao enviar e-mail: ' . $e->getMessage(), [
+                    'destinatario' => $dados['email'] ?? '',
+                    'tipo'         => 'confirmacao',
+                ]);
                 return false;
             }
         }
@@ -52,11 +55,13 @@
                 $mail->send();
 
                 return true;
-            } catch (Exception $erro) {
-                error_log('Erro ao enviar e-mail' .  $erro->getMessage());
-
-                return false;
-            }
+                } catch (Exception $e) {
+                    Logger::erro('Erro ao enviar e-mail: ' . $e->getMessage(), [
+                        'destinatario' => $dados['email'] ?? '',
+                        'tipo'         => 'confirmacao',
+                    ]);
+                    return false;
+                }
         }
 
         private static function templateConfirmacao(array $dados): string {
@@ -189,8 +194,12 @@
                 $mail->send();
 
                 return true;
-            } catch (Exception $erro) {
-                error_log('Erro ao enviar lembrete: ' . $erro->getMessage());
+            } catch (Exception $e) {
+                Logger::erro('Erro ao enviar e-mail: ' . $e->getMessage(), [
+                    'destinatario' => $dados['email'] ?? '',
+                    'tipo'         => 'confirmacao',
+                ]);
+
                 return false;
             }
         }
