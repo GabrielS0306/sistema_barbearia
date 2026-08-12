@@ -13,3 +13,5 @@ config/pix.php
 
 vendor/
 composer.phar
+
+storage/rate_limit/

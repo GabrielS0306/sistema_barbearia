@@ -18,6 +18,8 @@
         }
 
         public function barbeiros(): void {
+            $this->verificarRateLimit(30); // 30 requisições por minuto
+
             $model     = new Barbeiro();
             $barbeiros = $model->listarTodos();
 
@@ -32,6 +34,8 @@
         }
 
         public function servicos(): void {
+            $this->verificarRateLimit(30);
+
             $model     = new Servico();
             $servicos = $model->listarTodos();
 
@@ -47,6 +51,8 @@
         }
 
         public function horarios():void {
+            $this->verificarRateLimit(60); // mais permissivo pois é chamado pelo AJAX
+
             $barbeiroId = (int) ($_GET['barbeiro_id'] ?? 0);
             $data       = $_GET['data'] ?? '';
 
@@ -217,6 +223,24 @@
             ], $servicos);
 
             $this->json($dados);
+        }
+
+        private function verificarRateLimit(int $limite = 60): void {
+            $ip   = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $rota = $_SERVER['REQUEST_URI'] ?? '';
+            $chave = "api:{$ip}:{$rota}";
+
+            $cabecalhos = RateLimiter::cabecalhos($chave, $limite);
+            foreach ($cabecalhos as $nome => $valor) {
+                header("{$nome}: {$valor}");
+            }
+
+            if (!RateLimiter::verificar($chave, $limite)) {
+                $this->json([
+                    'erro'    => 'Muitas requisições. Tente novamente em alguns instantes.',
+                    'codigo'  => 429,
+                ], 429);
+            }
         }
     }
 

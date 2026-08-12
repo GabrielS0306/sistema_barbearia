@@ -16,6 +16,7 @@
     require_once __DIR__ . '/../core/Logger.php';
     require_once __DIR__ . '/../core/Database.php';
     require_once __DIR__ . '/../core/Paginacao.php';
+    require_once __DIR__ . '/../core/RateLimiter.php';
 
     // Ativa captura automática de erros e exceções
     Logger::capturarExcecoes();
