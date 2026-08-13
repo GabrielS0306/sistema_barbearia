@@ -144,9 +144,13 @@ barbearia/
 ├── config/
 ├── core/
 ├── database/
+├── logs/
 ├── public/
 │ ├── assets/js/
 │ └── uploads/
+├── scripts/
+├── storage/
+├── tests/
 └── vendor/
 ```
 
