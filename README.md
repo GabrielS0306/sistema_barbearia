@@ -45,6 +45,11 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - Confirmação de reembolso para agendamentos cancelados
 - Geração de relatório de agendamentos por período em PDF
 - Busca em tempo real nas listagens de serviços e barbeiros
+- Configuração de horários de funcionamento por dia da semana
+- Configuração de serviços por barbeiro
+- Visualização de logs do sistema
+- Métricas de desempenho por barbeiro no dashboard
+- Confirmação manual de pagamento PIX
 
 ### Barbeiro
 - Agenda do dia filtrável por data
@@ -75,6 +80,12 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - Geração de PDFs com DOMPDF
 - Logout automático por inatividade com aviso de contagem regressiva
 - Lembrete de agendamento por e-mail 24h antes via cron-job.org
+- Tema claro/escuro com persistência em localStorage
+- Rate limiting na API com headers de controle (X-RateLimit-*)
+- Sistema de logs com visualização no painel admin
+- Testes automatizados com PHPUnit (Paginacao, Csrf, Pix, Logger)
+- Horários de funcionamento configuráveis por dia da semana
+- Serviços configuráveis por barbeiro com filtragem dinâmica via AJAX
 
 ## 🗄️ Banco de Dados
 
@@ -120,6 +131,7 @@ cp config/mail.example.php config/mail.php
 | GET | `/api/agendamentos` | Agendamentos do cliente logado |
 | POST | `/api/agendamentos` | Criar novo agendamento |
 | GET | `/api/lembretes?token=X` | Envia lembretes do dia seguinte (cron job) |
+| GET | `/api/servicos/barbeiro?barbeiro_id=X` | Serviços de um barbeiro específico |
 
 ## 📁 Estrutura do projeto
 
@@ -140,7 +152,6 @@ barbearia/
 
 ## 🔮 Próximas funcionalidades
 
-- Integração PIX com webhook do Mercado Pago (confirmação automática de pagamento)
 - Autenticação JWT para a API REST
-- Histórico de alterações visível para o cliente
 - App mobile consumindo a API REST
+- Notificações push no navegador
