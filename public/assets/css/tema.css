@@ -1,0 +1,75 @@
+/* public/assets/css/tema.css */
+
+html.light {
+    --bg-primary:   #d9dee5;
+    --bg-secondary: #edf0f3;
+    --border:       #b4bdc8;
+    --text:         #1f2937;
+    --text-muted:   #596579;
+}
+
+html.light body {
+    background-color: #d9dee5 !important;
+    color: #1f2937 !important;
+}
+
+html.light nav {
+    background-color: #c4cbd4 !important;
+    border-color: #b4bdc8 !important;
+}
+
+html.light .bg-gray-950 {
+    background-color: #d9dee5 !important;
+}
+
+html.light .bg-gray-900 {
+    background-color: #edf0f3 !important;
+}
+
+html.light .bg-gray-800 {
+    background-color: #d1d7de !important;
+}
+
+html.light .border-gray-800 {
+    border-color: #b4bdc8 !important;
+}
+
+html.light .border-gray-700 {
+    border-color: #a5afbb !important;
+}
+
+html.light .text-gray-100 {
+    color: #1f2937 !important;
+}
+
+html.light .text-gray-300 {
+    color: #374151 !important;
+}
+
+html.light .text-gray-400 {
+    color: #596579 !important;
+}
+
+html.light .text-gray-500 {
+    color: #64748b !important;
+}
+
+html.light .text-gray-600 {
+    color: #475569 !important;
+}
+
+html.light .divide-gray-800 > * + * {
+    border-color: #b4bdc8 !important;
+}
+
+html.light .hover\:bg-gray-800:hover {
+    background-color: #d1d7de !important;
+}
+
+html.light .hover\:bg-gray-700:hover {
+    background-color: #c1c9d2 !important;
+}
+
+html.light footer {
+    border-color: #b4bdc8 !important;
+}

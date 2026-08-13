@@ -12,9 +12,13 @@
     <title><?= htmlspecialchars($titulo); ?> - Barbearia</title>
     <!-- tailwindcss -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Css / Js -> Tema -->
+    <link rel="stylesheet" href="/barbearia/public/assets/css/tema.css">
+    <script src="/barbearia/public/assets/js/tema.js"></script>
     <!-- Font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">    
 </head>
+
 <body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col w-full overflow-x-hidden">
     <nav class="bg-gray-900 border-b border-gray-800 px-6 py-4 w-full">
         <div class="flex items-center justify-between">
@@ -33,9 +37,14 @@
             <?php endif; ?>
 
             <!-- Links desktop (escondido no mobile) -->
-            <div class="hidden md:flex gap-4 text-sm">
+            <div class="hidden md:flex items-center gap-4 text-sm">
                 <?php if (isset($_SESSION['user_role'])): ?>
                     <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                        <!-- Botão de tema -->
+                        <button id="btn-tema" onclick="alternarTema()" class="w-8 h-8 -ml-2 flex items-center justify-center rounded-md border border-gray-700 bg-gray-800 text-gray-300 hover:text-amber-400 hover:border-amber-400 hover:bg-gray-700 transition" title="Alternar tema">
+                            ☀️
+                        </button>
+
                         <a href="/barbearia/admin/dashboard" class="hover:text-amber-400 transition">Dashboard</a>
                         <a href="/barbearia/admin/servicos" class="hover:text-amber-400 transition">Serviços</a>
                         <a href="/barbearia/admin/barbeiros" class="hover:text-amber-400 transition">Barbeiros</a>
