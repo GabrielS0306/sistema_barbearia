@@ -2,6 +2,65 @@
 
     // app/controllers/ApiController.php
     class ApiController {
+        private function autenticarJwt(): array|false {
+            $token = Jwt::tokenDaRequisicao();
+
+            if (!$token) {
+                $this->json(['erro' => 'Token não fornecido'], 401);
+
+                return false;
+            }
+
+            $payload = Jwt::validar($token);
+
+            if (!$payload) {
+                $this->json(['erro' => 'Token inválido ou expirado'], 401);
+
+                return false;
+            }
+
+            return $payload;
+        }
+
+        public function login(): void {
+            $body  = json_decode(file_get_contents('php://input'), true);
+            $email = trim($body['email'] ?? '');
+            $senha = $body['senha'] ?? '';
+
+            if (empty($email) || empty($senha)) {
+                $this->erro('Informe email e senha');
+
+                return;
+            }
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('SELECT * FROM usuarios WHERE email = :email');
+            $stmt->execute([':email' => $email]);
+            $usuario = $stmt->fetch();
+
+            if (!$usuario || !password_verify($senha, $usuario['senha'])) {
+                $this->json(['erro' => 'Credenciais inválidas.'], 401);
+                return;
+            }
+
+            $token = Jwt::gerar([
+                'user_id'   => $usuario['id'],
+                'user_role' => $usuario['role'],
+                'email'     => $usuario['email'],
+            ]);
+
+            $this->json([
+                'token'   => $token,
+                'tipo'    => 'Bearer',
+                'expira'  => 3600,
+                'usuario' => [
+                    'id'    => $usuario['id'],
+                    'email' => $usuario['email'],
+                    'role'  => $usuario['role'],
+                ],
+            ]);
+        }
+
         private function json(mixed $dados, int $status = 200): void {
             http_response_code($status);
             
@@ -87,13 +146,29 @@
         }
 
         public function agendamentos():void {
-            if (!isset($_SESSION['user_cliente_id'])) {
-                $this->erro('Não autorizado.', 401);
+            $payload = $this->autenticarJwt();
+            if (!$payload) return;
+
+            if ($payload['user_role'] !== 'cliente') {
+                $this->json(['erro' => 'Acesso negado.'], 403);
+
                 return;
             }
 
-            $model = new Agendamento();
-            $agendamentos = $model->buscarPorCliente($_SESSION['user_cliente_id']);
+            // Busca o cliente_id pelo usuario_id do token
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('SELECT id FROM clientes WHERE usuario_id = :uid');
+            $stmt->execute([':uid' => $payload['user_id']]);
+            $cliente = $stmt->fetch();
+
+            if (!$cliente) {
+                $this->json(['erro' => 'Cliente não encontrado.'], 404);
+
+                return;
+            }
+
+            $model        = new Agendamento();
+            $agendamentos = $model->buscarPorCliente($cliente['id']);
 
             $dados = array_map(fn($a) => [
                 'id'                 => $a['id'],
@@ -111,8 +186,21 @@
         }
 
         public function criarAgendamentos():void {
-            if (!isset($_SESSION['user_cliente_id'])) {
-                $this->erro('Não autorizado.', 401);
+            $payload = $this->autenticarJwt();
+            if (!$payload) return;
+
+            if ($payload['user_role'] !== 'cliente') {
+                $this->json(['erro' => 'Acesso negado.'], 403);
+                return;
+            }
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('SELECT id FROM clientes WHERE usuario_id = :uid');
+            $stmt->execute([':uid' => $payload['user_id']]);
+            $cliente = $stmt->fetch();
+
+            if (!$cliente) {
+                $this->json(['erro' => 'Cliente não encontrado.'], 404);
                 return;
             }
 

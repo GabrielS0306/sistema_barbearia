@@ -9,6 +9,7 @@
 
     // carrega classes de infraestrutura
     require_once __DIR__ . '/../core/Pix.php';
+    require_once __DIR__ . '/../core/Jwt.php';
     require_once __DIR__ . '/../core/Csrf.php';
     require_once __DIR__ . '/../core/Router.php';
     require_once __DIR__ . '/../core/Upload.php';
@@ -134,6 +135,7 @@
     $router->post('/api/agendamentos', 'ApiController::criarAgendamento');
     $router->get('/api/lembretes', 'ApiController::enviarLembretes');
     $router->get('/api/servicos/barbeiro', 'ApiController::servicosPorBarbeiro');
+    $router->post('/api/login', 'ApiController::login');
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';
