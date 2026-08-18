@@ -15,6 +15,7 @@
     <?php endif; ?>
     <?php if (isset($_SESSION['user_id'])): ?>
         <script src="/barbearia/public/assets/js/inatividade.js"></script>
+        <script src="/barbearia/public/assets/js/notificacoes.js"></script>
     <?php endif; ?>
 
     <?php if (!empty($_SESSION['sucesso'])): ?>

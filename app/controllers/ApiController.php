@@ -330,6 +330,60 @@
                 ], 429);
             }
         }
+
+        public function inscreverPush(): void {
+            if (!isset($_SESSION['user_id'])) {
+                $this->json(['erro' => 'Não autorizado.'], 401);
+                return;
+            }
+
+            $body = json_decode(file_get_contents('php://input'), true);
+
+            $endpoint = $body['endpoint'] ?? '';
+            $p256dh   = $body['keys']['p256dh'] ?? '';
+            $auth     = $body['keys']['auth'] ?? '';
+
+            if (empty($endpoint) || empty($p256dh) || empty($auth)) {
+                $this->erro('Dados de inscrição inválidos.');
+                return;
+            }
+
+            $db   = Database::getInstance();
+
+            // Remove inscrição antiga se existir
+            $stmt = $db->prepare('DELETE FROM push_inscricoes WHERE usuario_id = :uid AND endpoint = :ep');
+            $stmt->execute([':uid' => $_SESSION['user_id'], ':ep' => $endpoint]);
+
+            // Insere nova inscrição
+            $stmt = $db->prepare('
+                INSERT INTO push_inscricoes (usuario_id, endpoint, p256dh, auth)
+                VALUES (:uid, :ep, :p256dh, :auth)
+            ');
+            $stmt->execute([
+                ':uid'    => $_SESSION['user_id'],
+                ':ep'     => $endpoint,
+                ':p256dh' => $p256dh,
+                ':auth'   => $auth,
+            ]);
+
+            $this->json(['mensagem' => 'Inscrição realizada com sucesso!']);
+        }
+
+        public function cancelarPush(): void {
+            if (!isset($_SESSION['user_id'])) {
+                $this->json(['erro' => 'Não autorizado.'], 401);
+                return;
+            }
+
+            $body     = json_decode(file_get_contents('php://input'), true);
+            $endpoint = $body['endpoint'] ?? '';
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('DELETE FROM push_inscricoes WHERE usuario_id = :uid AND endpoint = :ep');
+            $stmt->execute([':uid' => $_SESSION['user_id'], ':ep' => $endpoint]);
+
+            $this->json(['mensagem' => 'Inscrição cancelada.']);
+        }
     }
 
 ?>

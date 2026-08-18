@@ -1,279 +1,297 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Tempo de geração: 08/08/2026 às 14:38
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
 SET time_zone = "+00:00";
 
+SET FOREIGN_KEY_CHECKS = 0;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- =========================================================
+-- EXCLUSÃO DAS TABELAS EXISTENTES
+-- =========================================================
 
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `push_inscricoes`;
+DROP TABLE IF EXISTS `agendamento_historico`;
+DROP TABLE IF EXISTS `agendamentos`;
+DROP TABLE IF EXISTS `barbeiro_servicos`;
+DROP TABLE IF EXISTS `barbeiros`;
+DROP TABLE IF EXISTS `clientes`;
+DROP TABLE IF EXISTS `servicos`;
+DROP TABLE IF EXISTS `horarios_funcionamento`;
+DROP TABLE IF EXISTS `usuarios`;
 
---
--- Estrutura para tabela `agendamentos`
---
-
-CREATE TABLE `agendamentos` (
-  `id` int(11) NOT NULL,
-  `cliente_id` int(11) NOT NULL,
-  `barbeiro_id` int(11) NOT NULL,
-  `servico_id` int(11) NOT NULL,
-  `data` date NOT NULL,
-  `hora` time NOT NULL,
-  `status` enum('pendente','confirmado','concluido','cancelado') DEFAULT 'pendente',
-  `forma_pagamento` enum('dinheiro','pix','cartao') DEFAULT 'dinheiro',
-  `status_pagamento` enum('pendente','pago','cancelado') DEFAULT 'pendente',
-  `reembolso_solicitado` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Estrutura para tabela `agendamento_historico`
---
-
-CREATE TABLE `agendamento_historico` (
-  `id` int(11) NOT NULL,
-  `agendamento_id` int(11) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `acao` enum('criado','confirmado','concluido','cancelado','adiado','reembolso_solicitado','reembolso_confirmado') NOT NULL,
-  `detalhes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Estrutura para tabela `barbeiros`
---
-
-CREATE TABLE `barbeiros` (
-  `id` int(11) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `especialidade` varchar(100) DEFAULT NULL,
-  `foto` varchar(255) DEFAULT NULL,
-  `ativo` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Estrutura para tabela `barbeiro_servicos`
---
-
-CREATE TABLE `barbeiro_servicos` (
-  `barbeiro_id` int(11) NOT NULL,
-  `servico_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Estrutura para tabela `clientes`
---
-
-CREATE TABLE `clientes` (
-  `id` int(11) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `telefone` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; 
-
---
--- Estrutura para tabela `horarios_funcionamento`
---
-
-CREATE TABLE `horarios_funcionamento` (
-  `id` int(11) NOT NULL,
-  `dia_semana` tinyint(1) NOT NULL COMMENT '0=domingo, 1=segunda, ..., 6=sabado',
-  `hora_inicio` time NOT NULL,
-  `hora_fim` time NOT NULL,
-  `ativo` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `horarios_funcionamento`
---
-
-INSERT INTO `horarios_funcionamento` (`id`, `dia_semana`, `hora_inicio`, `hora_fim`, `ativo`) VALUES
-(1, 1, '08:00:00', '18:00:00', 1),
-(2, 2, '08:00:00', '18:00:00', 1),
-(3, 3, '08:00:00', '18:00:00', 1),
-(4, 4, '08:00:00', '18:00:00', 1),
-(5, 5, '08:00:00', '18:00:00', 1),
-(6, 6, '08:00:00', '13:00:00', 1);
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `servicos`
---
-
-CREATE TABLE `servicos` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `descricao` text DEFAULT NULL,
-  `preco` decimal(8,2) NOT NULL,
-  `duracao_min` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Estrutura para tabela `usuarios`
---
+-- =========================================================
+-- TABELA: usuarios
+-- =========================================================
 
 CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `email` varchar(150) NOT NULL,
-  `senha` varchar(255) NOT NULL,
-  `role` enum('admin','barbeiro','cliente') NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(150) NOT NULL,
+    `senha` VARCHAR(255) NOT NULL,
+    `role` ENUM('admin','barbeiro','cliente') NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
---
--- Índices de tabela `agendamentos`
---
-ALTER TABLE `agendamentos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `barbeiro_id` (`barbeiro_id`),
-  ADD KEY `cliente_id` (`cliente_id`),
-  ADD KEY `servico_id` (`servico_id`);
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_usuarios_email` (`email`)
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
 
---
--- Índices de tabela `agendamento_historico`
---
-ALTER TABLE `agendamento_historico`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `agendamento_id` (`agendamento_id`),
-  ADD KEY `usuario_id` (`usuario_id`);
+-- =========================================================
+-- TABELA: clientes
+-- =========================================================
 
---
--- Índices de tabela `barbeiros`
---
-ALTER TABLE `barbeiros`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`);
+CREATE TABLE `clientes` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `usuario_id` INT(11) NOT NULL,
+    `nome` VARCHAR(100) NOT NULL,
+    `telefone` VARCHAR(20) DEFAULT NULL,
 
---
--- Índices de tabela `barbeiro_servicos`
---
-ALTER TABLE `barbeiro_servicos`
-  ADD PRIMARY KEY (`barbeiro_id`,`servico_id`),
-  ADD KEY `servico_id` (`servico_id`);
+    PRIMARY KEY (`id`),
+    KEY `idx_clientes_usuario_id` (`usuario_id`),
 
---
--- Índices de tabela `clientes`
---
-ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`);
+    CONSTRAINT `fk_clientes_usuario`
+        FOREIGN KEY (`usuario_id`)
+        REFERENCES `usuarios` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 
---
--- Índices de tabela `horarios_funcionamento`
---
-ALTER TABLE `horarios_funcionamento`
-  ADD PRIMARY KEY (`id`);
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
 
---
--- Índices de tabela `servicos`
---
-ALTER TABLE `servicos`
-  ADD PRIMARY KEY (`id`);
+-- =========================================================
+-- TABELA: barbeiros
+-- =========================================================
 
---
--- Índices de tabela `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+CREATE TABLE `barbeiros` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `usuario_id` INT(11) NOT NULL,
+    `nome` VARCHAR(100) NOT NULL,
+    `especialidade` VARCHAR(100) DEFAULT NULL,
+    `foto` VARCHAR(255) DEFAULT NULL,
+    `ativo` TINYINT(1) DEFAULT 1,
 
---
--- AUTO_INCREMENT para tabelas despejadas
---
+    PRIMARY KEY (`id`),
+    KEY `idx_barbeiros_usuario_id` (`usuario_id`),
 
---
--- AUTO_INCREMENT de tabela `agendamentos`
---
-ALTER TABLE `agendamentos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+    CONSTRAINT `fk_barbeiros_usuario`
+        FOREIGN KEY (`usuario_id`)
+        REFERENCES `usuarios` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 
---
--- AUTO_INCREMENT de tabela `agendamento_historico`
---
-ALTER TABLE `agendamento_historico`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
 
---
--- AUTO_INCREMENT de tabela `barbeiros`
---
-ALTER TABLE `barbeiros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+-- =========================================================
+-- TABELA: servicos
+-- =========================================================
 
---
--- AUTO_INCREMENT de tabela `clientes`
---
-ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+CREATE TABLE `servicos` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(100) NOT NULL,
+    `descricao` TEXT DEFAULT NULL,
+    `preco` DECIMAL(8,2) NOT NULL,
+    `duracao_min` INT(11) NOT NULL,
 
---
--- AUTO_INCREMENT de tabela `horarios_funcionamento`
---
-ALTER TABLE `horarios_funcionamento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+    PRIMARY KEY (`id`)
 
---
--- AUTO_INCREMENT de tabela `servicos`
---
-ALTER TABLE `servicos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
 
---
--- AUTO_INCREMENT de tabela `usuarios`
---
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+-- =========================================================
+-- TABELA: barbeiro_servicos
+-- =========================================================
 
---
--- Restrições para tabelas despejadas
---
+CREATE TABLE `barbeiro_servicos` (
+    `barbeiro_id` INT(11) NOT NULL,
+    `servico_id` INT(11) NOT NULL,
 
---
--- Restrições para tabelas `agendamentos`
---
-ALTER TABLE `agendamentos`
-  ADD CONSTRAINT `agendamentos_ibfk_1` FOREIGN KEY (`barbeiro_id`) REFERENCES `barbeiros` (`id`),
-  ADD CONSTRAINT `agendamentos_ibfk_2` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`),
-  ADD CONSTRAINT `agendamentos_ibfk_3` FOREIGN KEY (`servico_id`) REFERENCES `servicos` (`id`);
+    PRIMARY KEY (`barbeiro_id`, `servico_id`),
+    KEY `idx_barbeiro_servicos_servico` (`servico_id`),
 
---
--- Restrições para tabelas `agendamento_historico`
---
-ALTER TABLE `agendamento_historico`
-  ADD CONSTRAINT `agendamento_historico_ibfk_1` FOREIGN KEY (`agendamento_id`) REFERENCES `agendamentos` (`id`),
-  ADD CONSTRAINT `agendamento_historico_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
+    CONSTRAINT `fk_barbeiro_servicos_barbeiro`
+        FOREIGN KEY (`barbeiro_id`)
+        REFERENCES `barbeiros` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
 
---
--- Restrições para tabelas `barbeiros`
---
-ALTER TABLE `barbeiros`
-  ADD CONSTRAINT `barbeiros_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
+    CONSTRAINT `fk_barbeiro_servicos_servico`
+        FOREIGN KEY (`servico_id`)
+        REFERENCES `servicos` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 
---
--- Restrições para tabelas `barbeiro_servicos`
---
-ALTER TABLE `barbeiro_servicos`
-  ADD CONSTRAINT `barbeiro_servicos_ibfk_1` FOREIGN KEY (`barbeiro_id`) REFERENCES `barbeiros` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `barbeiro_servicos_ibfk_2` FOREIGN KEY (`servico_id`) REFERENCES `servicos` (`id`) ON DELETE CASCADE;
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
 
---
--- Restrições para tabelas `clientes`
---
-ALTER TABLE `clientes`
-  ADD CONSTRAINT `clientes_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
-COMMIT;
+-- =========================================================
+-- TABELA: horarios_funcionamento
+-- =========================================================
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE `horarios_funcionamento` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `dia_semana` TINYINT(1) NOT NULL COMMENT '0=domingo, 1=segunda, ..., 6=sabado',
+    `hora_inicio` TIME NOT NULL,
+    `hora_fim` TIME NOT NULL,
+    `ativo` TINYINT(1) DEFAULT 1,
+
+    PRIMARY KEY (`id`)
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
+
+-- =========================================================
+-- DADOS: horarios_funcionamento
+-- =========================================================
+
+INSERT INTO `horarios_funcionamento`
+(`dia_semana`, `hora_inicio`, `hora_fim`, `ativo`)
+VALUES
+(1, '08:00:00', '18:00:00', 1),
+(2, '08:00:00', '18:00:00', 1),
+(3, '08:00:00', '18:00:00', 1),
+(4, '08:00:00', '18:00:00', 1),
+(5, '08:00:00', '18:00:00', 1),
+(6, '08:00:00', '13:00:00', 1);
+
+-- =========================================================
+-- TABELA: agendamentos
+-- =========================================================
+
+CREATE TABLE `agendamentos` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `cliente_id` INT(11) NOT NULL,
+    `barbeiro_id` INT(11) NOT NULL,
+    `servico_id` INT(11) NOT NULL,
+    `data` DATE NOT NULL,
+    `hora` TIME NOT NULL,
+
+    `status` ENUM(
+        'pendente',
+        'confirmado',
+        'concluido',
+        'cancelado'
+    ) DEFAULT 'pendente',
+
+    `forma_pagamento` ENUM(
+        'dinheiro',
+        'pix',
+        'cartao'
+    ) DEFAULT 'dinheiro',
+
+    `status_pagamento` ENUM(
+        'pendente',
+        'pago',
+        'cancelado'
+    ) DEFAULT 'pendente',
+
+    `reembolso_solicitado` TINYINT(1) DEFAULT 0,
+
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`id`),
+
+    KEY `idx_agendamentos_cliente` (`cliente_id`),
+    KEY `idx_agendamentos_barbeiro` (`barbeiro_id`),
+    KEY `idx_agendamentos_servico` (`servico_id`),
+
+    CONSTRAINT `fk_agendamentos_cliente`
+        FOREIGN KEY (`cliente_id`)
+        REFERENCES `clientes` (`id`)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    CONSTRAINT `fk_agendamentos_barbeiro`
+        FOREIGN KEY (`barbeiro_id`)
+        REFERENCES `barbeiros` (`id`)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    CONSTRAINT `fk_agendamentos_servico`
+        FOREIGN KEY (`servico_id`)
+        REFERENCES `servicos` (`id`)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
+
+-- =========================================================
+-- TABELA: agendamento_historico
+-- =========================================================
+
+CREATE TABLE `agendamento_historico` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `agendamento_id` INT(11) NOT NULL,
+    `usuario_id` INT(11) NOT NULL,
+
+    `acao` ENUM(
+        'criado',
+        'confirmado',
+        'concluido',
+        'cancelado',
+        'adiado',
+        'reembolso_solicitado',
+        'reembolso_confirmado'
+    ) NOT NULL,
+
+    `detalhes` TEXT DEFAULT NULL,
+
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`id`),
+
+    KEY `idx_historico_agendamento` (`agendamento_id`),
+    KEY `idx_historico_usuario` (`usuario_id`),
+
+    CONSTRAINT `fk_historico_agendamento`
+        FOREIGN KEY (`agendamento_id`)
+        REFERENCES `agendamentos` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT `fk_historico_usuario`
+        FOREIGN KEY (`usuario_id`)
+        REFERENCES `usuarios` (`id`)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
+
+-- =========================================================
+-- TABELA: push_inscricoes
+-- =========================================================
+
+CREATE TABLE `push_inscricoes` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `usuario_id` INT(11) NOT NULL,
+    `endpoint` TEXT NOT NULL,
+    `p256dh` VARCHAR(255) NOT NULL,
+    `auth` VARCHAR(255) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`id`),
+
+    KEY `idx_push_usuario` (`usuario_id`),
+
+    CONSTRAINT `fk_push_usuario`
+        FOREIGN KEY (`usuario_id`)
+        REFERENCES `usuarios` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
+
+-- =========================================================
+-- FINALIZAÇÃO
+-- =========================================================
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -18,6 +18,7 @@
     require_once __DIR__ . '/../core/Database.php';
     require_once __DIR__ . '/../core/Paginacao.php';
     require_once __DIR__ . '/../core/RateLimiter.php';
+    require_once __DIR__ . '/../core/PushNotification.php';
 
     // Ativa captura automática de erros e exceções
     Logger::capturarExcecoes();
@@ -136,6 +137,8 @@
     $router->get('/api/lembretes', 'ApiController::enviarLembretes');
     $router->get('/api/servicos/barbeiro', 'ApiController::servicosPorBarbeiro');
     $router->post('/api/login', 'ApiController::login');
+    $router->post('/api/push/inscrever', 'ApiController::inscreverPush');
+    $router->post('/api/push/cancelar',  'ApiController::cancelarPush');
 
     // Pega a URL vinda do .htaccess e remove a barra inicial/final
     $uri = $_GET['url'] ?? '';

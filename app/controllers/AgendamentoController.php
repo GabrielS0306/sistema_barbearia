@@ -314,6 +314,14 @@
                 );
             }
 
+            // Notifica o cliente via push
+            PushNotification::enviarParaUsuario(
+                $_SESSION['user_id'],
+                'Agendamento confirmado! ✂',
+                "Seu agendamento foi realizado com sucesso.",
+                '/barbearia/agendamento/meus'
+            );
+
             $stmt = $db->prepare('
                 SELECT a.*, c.nome AS cliente, b.nome AS barbeiro,
                         s.nome AS servico, s.preco, u.email 

@@ -45,6 +45,13 @@
                             ☀️
                         </button>
 
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <button id="btn-notificacoes"
+                                class="text-gray-400 hover:text-amber-400 transition text-sm">
+                                🔕 Ativar notificações
+                            </button>
+                        <?php endif; ?>
+
                         <a href="/barbearia/admin/dashboard" class="hover:text-amber-400 transition">Dashboard</a>
                         <a href="/barbearia/admin/servicos" class="hover:text-amber-400 transition">Serviços</a>
                         <a href="/barbearia/admin/barbeiros" class="hover:text-amber-400 transition">Barbeiros</a>

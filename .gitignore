@@ -2,6 +2,8 @@ config/database.php
 .vscode/
 *.log
 
+.env
+
 logs/*.log
 
 public/uploads/*
