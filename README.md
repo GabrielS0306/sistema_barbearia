@@ -86,6 +86,12 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - Testes automatizados com PHPUnit (Paginacao, Csrf, Pix, Logger)
 - Horários de funcionamento configuráveis por dia da semana
 - Serviços configuráveis por barbeiro com filtragem dinâmica via AJAX
+- Notificações push no navegador (Web Push API + Service Worker)
+- Autenticação JWT para a API REST
+- Rate limiting na API com headers de controle (X-RateLimit-*)
+- Sistema de logs com visualização no painel admin
+- Testes automatizados com PHPUnit (Paginacao, Csrf, Pix, Logger)
+- Tema claro/escuro com persistência em localStorage
 
 ## 🗄️ Banco de Dados
 
@@ -132,6 +138,9 @@ cp config/mail.example.php config/mail.php
 | POST | `/api/agendamentos` | Criar novo agendamento |
 | GET | `/api/lembretes?token=X` | Envia lembretes do dia seguinte (cron job) |
 | GET | `/api/servicos/barbeiro?barbeiro_id=X` | Serviços de um barbeiro específico |
+| POST | `/api/login` | Autenticação e geração de token JWT |
+| POST | `/api/push/inscrever` | Inscrever para push notifications |
+| POST | `/api/push/cancelar` | Cancelar push notifications |
 
 ## 📁 Estrutura do projeto
 
@@ -156,6 +165,5 @@ barbearia/
 
 ## 🔮 Próximas funcionalidades
 
-- Autenticação JWT para a API REST
-- App mobile consumindo a API REST
-- Notificações push no navegador
+- App mobile (React Native + Expo) consumindo a API REST
+- Histórico de alterações visível para o cliente
