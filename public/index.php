@@ -61,6 +61,8 @@
 
     $router->get('/agendamento/comprovante', 'AgendamentoController::comprovante', ['cliente']);
 
+    $router->get('/agendamento/historico', 'AgendamentoController::historico', ['cliente']);
+
     $router->get('/agendamento/pagamento', 'AgendamentoController::pagamento', ['cliente']);
     $router->post('/agendamento/confirmar-pagamento', 'AgendamentoController::confirmarPagamento', ['cliente']);
 

@@ -72,6 +72,45 @@
             require __DIR__ . "/../views/agendamento/lista.php";
         }
 
+        public function historico(): void {
+            $id = (int) ($_GET['id'] ?? 0);
+
+            if (!$id) {
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            $db   = Database::getInstance();
+            $stmt = $db->prepare('
+                SELECT a.*,
+                    c.nome AS cliente,
+                    b.nome AS barbeiro,
+                    s.nome AS servico
+                FROM agendamentos a
+                JOIN clientes c ON a.cliente_id = c.id
+                JOIN barbeiros b ON a.barbeiro_id = b.id
+                JOIN servicos s ON a.servico_id = s.id
+                WHERE a.id = :id AND a.cliente_id = :cliente_id
+            ');
+
+            $stmt->execute([
+                ':id'         => $id,
+                ':cliente_id' => $_SESSION['user_cliente_id'],
+            ]);
+
+            $agendamento = $stmt->fetch();
+
+            if (!$agendamento) {
+                header('Location: /barbearia/agendamento/meus');
+                exit;
+            }
+
+            $modelHistorico = new AgendamentoHistorico();
+            $historico      = $modelHistorico->buscarPorAgendamento($id);
+
+            require __DIR__ . '/../views/agendamento/historico.php';
+        }
+
         public function comprovante(): void {
             $id = (int) ($_GET['id'] ?? 0);
 

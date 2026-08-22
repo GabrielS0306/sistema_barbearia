@@ -103,9 +103,15 @@
                         </td>
                         
                         <td class="px-6 py-4">
-                            <a href="/barbearia/agendamento/comprovante?id=<?= $ag['id'] ?>" target="_blank" class="text-amber-400 hover:underline text-sm">
-                                PDF
-                            </a>
+                            <div class="flex flex-col gap-1">
+                                <a href="/barbearia/agendamento/comprovante?id=<?= $ag['id'] ?>" target="_blank" class="text-amber-400 hover:underline text-sm">
+                                    PDF
+                                </a>
+
+                                <a href="/barbearia/agendamento/historico?id=<?= $ag['id'] ?>" class="text-amber-400 hover:underline text-sm">
+                                    Histórico
+                                </a>
+                            </div>
                         </td>
 
                         <td class="px-6 py-4">
