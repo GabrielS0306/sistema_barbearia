@@ -66,6 +66,7 @@ Acesse o sistema em produção: [barb-system.rf.gd/barbearia/login](https://barb
 - Listagem de agendamentos com status de pagamento e paginação
 - Perfil editável (nome e telefone)
 - Pagamento via PIX com QR Code gerado dinamicamente e código copia-e-cola
+- Histórico de alterações do agendamento (linha do tempo com ações realizadas)
 
 ### Sistema
 - Arquitetura MVC sem framework
@@ -163,6 +164,8 @@ barbearia/
 └── vendor/
 ```
 
-## 🔮 Próximas funcionalidades
+## 👨‍💻 Sobre o projeto
 
-- Histórico de alterações visível para o cliente
+Este projeto foi desenvolvido como parte do meu portfólio para colocar em prática conceitos de **PHP, arquitetura MVC, APIs REST, banco de dados, segurança e integração com serviços externos**. Mais do que um sistema de agendamento, ele representa minha evolução no desenvolvimento backend e minha busca por construir aplicações cada vez mais completas, organizadas e seguras.
+
+Obrigado por conferir o projeto! 🚀
