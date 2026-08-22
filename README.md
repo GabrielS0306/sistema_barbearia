@@ -165,5 +165,4 @@ barbearia/
 
 ## 🔮 Próximas funcionalidades
 
-- App mobile (React Native + Expo) consumindo a API REST
 - Histórico de alterações visível para o cliente

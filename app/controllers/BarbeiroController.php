@@ -22,7 +22,7 @@
             $id = (int) ($_POST['id'] ?? 0);
             $status = $_POST['status'] ?? '';
 
-            $statusPermitidos = ['onfirmado', 'concluido', 'cancelado'];
+            $statusPermitidos = ['confirmado', 'concluido', 'cancelado'];
 
             if ($id && in_array($status, $statusPermitidos)) {
                 $db = Database::getInstance();

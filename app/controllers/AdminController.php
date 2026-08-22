@@ -259,7 +259,7 @@
                 $historico->registrar(
                     $id,
                     $_SESSION['user_id'],
-                    'pix_confirmado',
+                    'confirmado',
                     'Pagamento via PIX confirmado pelo admin.'
                 );
 
