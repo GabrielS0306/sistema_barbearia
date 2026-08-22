@@ -3,14 +3,14 @@
 const VAPID_PUBLIC_KEY = 'BOkBjVFiNwBBnPDmXeEFvGQzf7kQn_5VKcNmxSBjKrMlZuA8YdP2tC3xW6R1mH9nEoQ4sL7vIjXyZbUwTpDc';
 
 async function registrarServiceWorker() {
-    if (!('serviceWorker' in navigation) || !('PushManager' in window)) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         console.log('Push de notificações não suportadas');
 
         return;
     }
 
     try {
-        const registro = await navigation.serviceWorker.register('/barbearia/public/sw.js');
+        const registro = await navigator.serviceWorker.register('/barbearia/public/sw.js');
         console.log('Service Worker registrado');
         return registro;
     } catch (err) {
@@ -75,20 +75,23 @@ async function verificarInscricao() {
 }
 
 function atualizarBotao(inscrito) {
-    const botao = document.getElementById('btn-notificacoes');
-    if (!botao) return;
+    const botoes = [document.getElementById('btn-notificacoes'), document.getElementById('btn-notificacoes-mobile')];
 
-    if (inscrito) {
-        botao.textContent = '🔔 Notificações ativas';
-        botao.onclick = cancelarNotificacoes;
-        botao.classList.add('text-amber-400');
-        botao.classList.remove('text-gray-400');
-    } else {
-        botao.textContent = '🔕 Ativar notificações';
-        botao.onclick = inscreverNotificacoes;
-        botao.classList.remove('text-amber-400');
-        botao.classList.add('text-gray-400');
-    }
+    botoes.forEach((botao) => {
+        if (!botao) return;
+
+        if (inscrito) {
+            botao.textContent = '🔔 Notificações ativas';
+            botao.onclick = cancelarNotificacoes;
+            botao.classList.add('text-amber-400');
+            botao.classList.remove('text-gray-300');
+        } else {
+            botao.textContent = '🔕 Ativar notificações';
+            botao.onclick = inscreverNotificacoes;
+            botao.classList.remove('text-amber-400');
+            botao.classList.add('text-gray-300');
+        }
+    });
 }
 
 function urlBase64ToUint8Array(base64String) {

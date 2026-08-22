@@ -23,13 +23,14 @@ function alternarTema() {
 
 function atualizarIcone() {
     const tema  = localStorage.getItem(CHAVE) || 'escuro';
-    const botao = document.getElementById('btn-tema');
+    const botoes = [document.getElementById('btn-tema'), document.getElementById('btn-tema-mobile')];
 
-    if (botao) {
+    botoes.forEach((botao) => {
+        if (!botao) return;
+
         botao.innerHTML = tema === 'escuro' ? '☀️' : '🌙';
-
         botao.title     = tema === 'escuro' ? 'Mudar para tema claro' : 'Mudar para tema escuro';
-    }
+    });
 }
 
 // Aplica o tema salvo no localStorage ao carregar a página

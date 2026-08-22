@@ -39,19 +39,19 @@
             <!-- Links desktop (escondido no mobile) -->
             <div class="hidden md:flex items-center gap-4 text-sm">
                 <?php if (isset($_SESSION['user_role'])): ?>
-                    <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                        <!-- Botão de tema -->
-                        <button id="btn-tema" onclick="alternarTema()" class="w-8 h-8 -ml-2 flex items-center justify-center rounded-md border border-gray-700 bg-gray-800 text-gray-300 hover:text-amber-400 hover:border-amber-400 hover:bg-gray-700 transition" title="Alternar tema">
-                            ☀️
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <button id="btn-notificacoes"
+                            class="flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-700 bg-gray-800 text-gray-300 hover:text-amber-400 hover:border-amber-400 hover:bg-gray-700 transition text-sm">
+                            🔕 Ativar notificações
                         </button>
+                    <?php endif; ?>
 
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                            <button id="btn-notificacoes"
-                                class="text-gray-400 hover:text-amber-400 transition text-sm">
-                                🔕 Ativar notificações
-                            </button>
-                        <?php endif; ?>
+                    <!-- Botão de tema -->
+                    <button id="btn-tema" onclick="alternarTema()" class="w-8 h-8 -ml-2 flex items-center justify-center rounded-md border border-gray-700 bg-gray-800 text-gray-300 hover:text-amber-400 hover:border-amber-400 hover:bg-gray-700 transition" title="Alternar tema">
+                        ☀️
+                    </button>
 
+                    <?php if ($_SESSION['user_role'] === 'admin'): ?>
                         <a href="/barbearia/admin/dashboard" class="hover:text-amber-400 transition">Dashboard</a>
                         <a href="/barbearia/admin/servicos" class="hover:text-amber-400 transition">Serviços</a>
                         <a href="/barbearia/admin/barbeiros" class="hover:text-amber-400 transition">Barbeiros</a>
@@ -70,6 +70,19 @@
         <!-- Menu mobile (escondido por padrão) -->
         <?php if (isset($_SESSION['user_role'])): ?>
             <div id="menu-mobile" class="hidden md:hidden mt-4 flex flex-col gap-3 text-sm border-t border-gray-800 pt-4">
+                <div class="flex items-center gap-3 pb-1">
+                    <button id="btn-tema-mobile" onclick="alternarTema()" class="w-8 h-8 flex items-center justify-center rounded-md border border-gray-700 bg-gray-800 text-gray-300 hover:text-amber-400 hover:border-amber-400 hover:bg-gray-700 transition" title="Alternar tema">
+                        ☀️
+                    </button>
+
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <button id="btn-notificacoes-mobile"
+                            class="flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-700 bg-gray-800 text-gray-300 hover:text-amber-400 hover:border-amber-400 hover:bg-gray-700 transition text-sm">
+                            🔕 Ativar notificações
+                        </button>
+                    <?php endif; ?>
+                </div>
+
                 <?php if ($_SESSION['user_role'] === 'admin'): ?>
                     <a href="/barbearia/admin/dashboard" class="hover:text-amber-400 transition">Dashboard</a>
                     <a href="/barbearia/admin/servicos" class="hover:text-amber-400 transition">Serviços</a>
